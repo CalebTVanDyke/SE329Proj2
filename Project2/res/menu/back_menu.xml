@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app.se329.project2="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/go_back"
+        android:icon="@drawable/ic_menu_back"
+        android:orderInCategory="99"
+        android:title="Go Back"
+        android:titleCondensed="Go Back"
+        app.se329.project2:showAsAction="never|collapseActionView"/>
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_settings"/>
+    
+    
+</menu>
