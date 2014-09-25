@@ -11,7 +11,6 @@ import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
-
 import app.se329.project2.tools.AnimationEndListener;
 /**
  * Popup activity is an activity class that allows the easy creation of views as popups.
