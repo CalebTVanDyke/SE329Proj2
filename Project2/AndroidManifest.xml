@@ -33,6 +33,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="app.se329.project2.PopupActivity"
+            android:label=""
+            android:launchMode="singleTop"
+            android:parentActivityName="app.se329.project2.MainActivity"
+            android:theme="@style/Theme.Transparent" >
+        </activity>
     </application>
 
 </manifest>

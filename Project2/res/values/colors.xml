@@ -12,4 +12,5 @@
     <color name="photostream_overlay">#88000000</color>
     <color name="overlay">#88FFFFFF</color>
     <color name="dark_overlay">#BB000000</color>
+    <color name="blue">#FF33b5e5</color>
 </resources>

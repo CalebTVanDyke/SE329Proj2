@@ -39,7 +39,7 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/email"
+        android:id="@+id/pass_reg_field"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/retryNet"

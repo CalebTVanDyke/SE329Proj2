@@ -109,7 +109,7 @@ public class MainActivity extends ActionBarActivity {
 
 			Bundle bundle = new Bundle();
 			bundle.putBoolean(FIRST_LEVEL_FRAGMENT, true);
-			setContent(new HomeFragment(), bundle, "Home");
+			setContent(new LoginFragment(), bundle, "Home");
 		} else if (currentFragment != null) {
 			if (currentFragment.onBackPressed() == false)
 				super.onBackPressed();
@@ -142,9 +142,9 @@ public class MainActivity extends ActionBarActivity {
 			Bundle selectedFragmentBundle = new Bundle();
 
 			if (fragmentTitle.contentEquals("Home")) {
-				selectedFragment = new HomeFragment();
+				selectedFragment = new LoginFragment();
 			} else {
-				selectedFragment = new HomeFragment();
+				selectedFragment = new LoginFragment();
 			}
 
 			selectedFragmentBundle.putBoolean(FIRST_LEVEL_FRAGMENT, false);
@@ -314,7 +314,7 @@ public class MainActivity extends ActionBarActivity {
 	 * Sets the fragment on initial starting and retrying
 	 */
 	private void setDefaultFragment() {
-		(currentFragment = new HomeFragment()).setArguments(new Bundle());
+		(currentFragment = new LoginFragment()).setArguments(new Bundle());
 		String firstItem = Navigation.getItems(this)[0];
 		getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, currentFragment, firstItem).commit();
 
