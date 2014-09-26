@@ -13,7 +13,7 @@
         <ScrollView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true" >
+            android:layout_centerVertical="true">
 
             <RelativeLayout
                 android:id="@+id/popup_container"
@@ -21,7 +21,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:background="#FFFFFF"
+                android:background="@color/faint_grey"
                 android:focusable="false"
                 android:orientation="vertical"
                 android:padding="5dp" >
@@ -123,7 +123,7 @@
                         android:padding="14dp"
                         android:hint="Password"
                         android:inputType="textPassword" 
-                        android:textColor="#FF000000" />
+                        android:textColor="#000000" />
 
                     <TextView
                         android:id="@+id/conf_pass_text"
@@ -158,7 +158,7 @@
                         android:id="@+id/FrameLayout08"
                         android:layout_width="match_parent"
                         android:layout_height="3px"
-                        android:background="#000000" >
+                        android:background="@color/gray" >
                     </FrameLayout>
 
                     <TextView
@@ -171,8 +171,8 @@
                         android:gravity="center"
                         android:padding="14dp"
                         android:text="Cancel"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="#FF000000" />
+                        android:textStyle="bold"
+                        android:textColor="@color/blue" />
 
                     <TextView
                         android:id="@+id/register_user_butt"
@@ -184,9 +184,9 @@
                         android:layout_toLeftOf="@+id/FrameLayout07"
                         android:gravity="center"
                         android:padding="14dp"
+                        android:textStyle="bold"
                         android:text="Register"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="#FF000000" />
+                        android:textColor="@color/blue" />
 
                     <FrameLayout
                         android:id="@+id/FrameLayout07"
@@ -195,7 +195,7 @@
                         android:layout_alignBottom="@+id/cancel_reg_butt"
                         android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
-                        android:background="#000000" >
+                        android:background="@color/gray" >
                     </FrameLayout>
                 </RelativeLayout>
                 

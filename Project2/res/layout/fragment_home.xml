@@ -9,7 +9,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/dark_overlay"
-            android:paddingTop="?attr/actionBarSize"
+            android:paddingTop="15dp"
             android:paddingBottom="@dimen/padding_small">
 
             <RelativeLayout
@@ -47,17 +47,17 @@
         </FrameLayout>
 
     <EditText
-        android:id="@+id/pass_text"
+        android:id="@+id/pass_field"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/username_text"
-        android:layout_below="@+id/username_text"
+        android:layout_alignLeft="@+id/username_field"
+        android:layout_below="@+id/username_field"
         android:hint="Password"
         android:ems="10"
         android:inputType="textPassword" />
 
     <EditText
-        android:id="@+id/username_text"
+        android:id="@+id/username_field"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -69,57 +69,11 @@
     </EditText>
 
     <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/pass_text"
-        android:layout_alignTop="@+id/locallogin_butt"
-        android:text="Sign In:" 
-        android:textColor="@color/blue"/>
-
-    <Button
-        android:id="@+id/locallogin_butt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/pass_text"
-        android:layout_toRightOf="@+id/textView1"
-        android:text="Local"
-        android:onClick="loginLocal" />
-
-    <Button
-        android:id="@+id/netlogin_butt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/locallogin_butt"
-        android:layout_alignBottom="@+id/locallogin_butt"
-        android:layout_toRightOf="@+id/locallogin_butt"
-        android:text="Net" 
-        android:onClick="loginNet" />
-
-    <Button
-        android:id="@+id/signup_butt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/new_user_text"
-        android:text="Sign Up" />
-
-    <TextView
-        android:id="@+id/new_user_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/netlogin_butt"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="New User?" 
-        android:textColor="@color/blue"/>
-
-    <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/username_text"
-        android:layout_alignLeft="@+id/pass_text"
+        android:layout_above="@+id/username_field"
+        android:layout_alignLeft="@+id/pass_field"
         android:layout_centerHorizontal="true"
         android:text="Please Sign In:"
         android:textColor="@color/blue" />
@@ -132,5 +86,31 @@
         android:layout_above="@+id/textView2"
         android:layout_centerHorizontal="true"
         android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/locallogin_butt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/pass_field"
+        android:layout_below="@+id/pass_field"
+        android:onClick="loginLocal"
+        android:text="Sign in" />
+
+    <TextView
+        android:id="@+id/new_user_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/locallogin_butt"
+        android:layout_centerHorizontal="true"
+        android:text="New User?"
+        android:textColor="@color/blue" />
+
+    <Button
+        android:id="@+id/signup_butt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/new_user_text"
+        android:layout_centerHorizontal="true"
+        android:text="Sign Up" />
     
 </RelativeLayout>

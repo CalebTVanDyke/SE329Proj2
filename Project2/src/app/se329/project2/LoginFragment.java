@@ -1,8 +1,7 @@
 package app.se329.project2;
 
-import java.text.StringCharacterIterator;
-
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -20,35 +19,61 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-import app.se329.project2.model.ProjectContext;
 import app.se329.project2.tools.DatabaseAccess;
+import app.se329.project2.util.MyJsonUtil;
 
 public class LoginFragment extends ProjectFragment{
 
-	private ProjectContext proContext;
     View rootView;
 
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     	
 		rootView = inflater.inflate(R.layout.fragment_home, container, false);
-		proContext = ProjectContext.getProjectContext();
 		setupInitial(rootView);
 		
 		return rootView;
     }
 
-    private void loginLocal() {
-		
-		Log.i("Login", "Attempting Local Login");
-	}
-	private void loginNet() {
+    private void attemptLogin() {
+    	EditText username = (EditText) rootView.findViewById(R.id.username_field);
+		EditText pass = (EditText) rootView.findViewById(R.id.pass_field);
+		final String userToVerify = username.getText().toString();
+		final String passToVerify = pass.getText().toString();
+
+		new AsyncTask<String, Object, String>() {
+			DatabaseAccess dbAccess = new DatabaseAccess(rootView.getContext());
 			
-		Log.i("Login", "Attempting Net Login");
-	}
-	private void launchRegisterPopup() {
+			protected void onPreExecute() {
+				rootView.findViewById(R.id.reg_loading_home).setVisibility(View.VISIBLE);
+			};
+			
+			@Override
+			protected String doInBackground(String... params) {
+				
+				// query to see if username is available.
+				String verifyUser = "Select Password from Users where Username = '"+userToVerify+"';";
+				String result = dbAccess.query(verifyUser);// should return null if no matches found.
+
+				return result;// User Already Exists
+			}
+			
+			protected void onPostExecute(String result) {
+				rootView.findViewById(R.id.reg_loading_home).setVisibility(View.INVISIBLE);
+				if(result.contains(passToVerify)){
+					Log.i("User", "Sign on success!");
+					boolean newUser = new MyJsonUtil(rootView.getContext()).verifyLocalUser(userToVerify, passToVerify);
+					// TODO take user to their home!
+					promptUser("NAILED IT!", "Damn them credentials be matchin server mighty nice.");
+				}
+				else if(result.equals("ER"))promptUser("Network Error", "Please check network connection and try again.");
+				else promptUser("Login Failure", "Incorrect username or password.");
+			}
+		}.execute();
 		
+	}
+
+	private void launchRegisterPopup() {
 		PopupActivity.closable = true;
 		PopupActivity.popup(getActivity(),new RegisterPopup(), false);
 	}
@@ -87,24 +112,16 @@ public class LoginFragment extends ProjectFragment{
 		root.findViewById(R.id.context_bar).setAnimation(AnimationUtils.loadAnimation(root.getContext(), R.animator.home_screen_animation));
 		setHasOptionsMenu(true);
 		
-		Button localLogin = (Button) rootView.findViewById(R.id.locallogin_butt);
+		Button localLogin = (Button) root.findViewById(R.id.locallogin_butt);
 		localLogin.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				loginLocal();
-			}
-		});
-		Button netLogin = (Button) rootView.findViewById(R.id.netlogin_butt);
-		netLogin.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				loginNet();
+				attemptLogin();
 			}
 		});
 		
-		Button registerButt = (Button) rootView.findViewById(R.id.signup_butt);
+		Button registerButt = (Button) root.findViewById(R.id.signup_butt);
 		registerButt.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -113,114 +130,14 @@ public class LoginFragment extends ProjectFragment{
 			}
 		});
 	}
-
-	class RegisterPopup extends Popup {
-
-		/**
-		 * Sets up text for views and listeners for buttons in the popup box.
-		 * 
-		 * @param popupContent
-		 */
-		public void setUpPopupViews(View popupContent) {
-			
-			popupContent.findViewById(R.id.register_user_butt).setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					attemptRegister();
-				}
-			});
-			
-			popupContent.findViewById(R.id.cancel_reg_butt).setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					closePopup();
-				}
-			});
-		}
-		
-		@Override
-		public View getPopupContentView() {
-			View popupContent = LayoutInflater.from(getActivity()).inflate(R.layout.popup_register, null, false);
-			setUpPopupViews(popupContent);
-			return popupContent;
-		}
-
-		@Override
-		public void popupIsShown(PopupActivity popupActivity) {
-			popupActivity.getPopupContent().setVisibility(View.VISIBLE);
-		}
-		
-		private void attemptRegister(){
-			
-			EditText username = (EditText) popupActivity.findViewById(R.id.username_reg_field);
-			EditText pass = (EditText) popupActivity.findViewById(R.id.pass_reg_field);
-			EditText passConf = (EditText) popupActivity.findViewById(R.id.conf_pass_field);
-			final String userToEnter = username.getText().toString();
-			final String passToEnter = pass.getText().toString();
-			
-			closePopup();
-			
-			if(pass.length() < 6)
-			{
-				Toast.makeText(popupActivity, "Passwords must be at least 6 chars.", Toast.LENGTH_LONG).show();
-				return;
-			}
-			if(!pass.getText().toString().equals(passConf.getText().toString()))
-			{
-				Toast.makeText(popupActivity, "Passwords do not match. Please try again.", Toast.LENGTH_LONG).show();
-				return;
-			}
-			
-			Log.i("Register", "Registering User: " + userToEnter + " with pass: " + passToEnter);
-			
-			new AsyncTask<String, Object, String>() {
-				DatabaseAccess dbAccess = new DatabaseAccess(rootView.getContext());
-				
-				protected void onPreExecute() {
-					rootView.findViewById(R.id.reg_loading_home).setVisibility(View.VISIBLE);
-				};
-				
-				@Override
-				protected String doInBackground(String... params) {
-					
-					// query to see if username is available.
-					String verifyUser = "Select id from Users where Username = '"+userToEnter+"';";
-					String result = dbAccess.query(verifyUser);// should return null if no matches found.
-					
-					Log.i("Query", "Result: >"+result+"<");
-					
-					if(result.equals("null\n"))// No users were found. Let's add them.
-					{
-						Log.i("Register", "---------- Adding User to Users table");
-						String insertUser = "INSERT INTO `Users`(`Username`, `Password`)" +
-												"VALUES ('"+userToEnter+"','"+passToEnter+"')";
-						result = dbAccess.query(insertUser);
-						return result;
-					}
-					return "UAE";// User Already Exists
-				}
-				
-				protected void onPostExecute(String result) {
-					rootView.findViewById(R.id.reg_loading_home).setVisibility(View.INVISIBLE);
-					
-					Log.i("Query Result", "Final Result: " + result);
-					if(result.equals("ER"))promptUser("Network Error", "Please check network connection and try again.");
-					else if(result.equals("UAE"))promptUser("Registration Error", "User already exists! Please try another.");
-					else{
-						promptUser("Registration Success", "Please log in to continue.");
-						closePopup();
-					}
-				};
-			}.execute();
-		}
-		private void promptUser(String title, String message){
-			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(rootView.getContext());
-			alertDialogBuilder.setTitle(title);
-			alertDialogBuilder
-				.setMessage(message)
-				.setCancelable(false)
-				.setPositiveButton("Okay", null);
-			alertDialogBuilder.create().show();
-		}
+	
+	private void promptUser(String title, String message){
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(rootView.getContext());
+		alertDialogBuilder.setTitle(title);
+		alertDialogBuilder
+			.setMessage(message)
+			.setCancelable(false)
+			.setPositiveButton("Okay", null);
+		alertDialogBuilder.create().show();
 	}
 }
