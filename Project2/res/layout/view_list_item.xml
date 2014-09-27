@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/list_item_height_med"
+    android:layout_height="@dimen/list_item_height_large"
     android:background="@drawable/selector_list_item"
     android:orientation="horizontal" >
 
@@ -14,9 +14,9 @@
         android:src="@drawable/ic_launcher"
         android:layout_alignParentLeft="true" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/list_item_text_wrapper"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_toRightOf="@+id/list_item_icon" >
@@ -24,10 +24,12 @@
         <TextView
             android:id="@+id/list_item_textview"
             android:layout_width="wrap_content"
-            android:layout_height="0dip"
-            android:layout_weight="1.0"
-            android:maxLines="1"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="20dp"
             android:gravity="center_vertical"
+            android:maxLines="1"
             android:paddingLeft="@dimen/padding_medium"
             android:text="Item Name Here"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -36,22 +38,25 @@
             android:id="@+id/list_item_subtextview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:maxLines="1"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/list_item_textview"
             android:gravity="center_vertical"
-            android:paddingBottom="@dimen/padding_small"
+            android:maxLines="1"
+            android:paddingTop="@dimen/padding_small"
             android:paddingLeft="@dimen/padding_large"
-            android:text="Item Description Here"/>
+            android:text="Item Description Here" />
+
+        <TextView
+            android:id="@+id/list_item_text_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/list_item_textview"
+            android:layout_alignBottom="@+id/list_item_textview"
+            android:layout_alignParentRight="true"
+            android:paddingRight="@dimen/padding_medium"
+            android:gravity="center"
+            android:text="##" />
         
-    </LinearLayout>
-	
-     <TextView
-        android:id="@+id/list_item_text_right"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/padding_medium"
-        android:paddingTop="@dimen/padding_medium"
-        android:gravity="center"
-        android:layout_alignParentRight="true" 
-        android:text="##"/>
+    </RelativeLayout>
+
 </RelativeLayout>

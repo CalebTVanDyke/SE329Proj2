@@ -70,7 +70,7 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 				InventoryItem item = items.get(position);
 				ListItemView listItem = new ListItemView(getActivity());
 				listItem.setItemName(item.getName());
-				listItem.setItemIcon(R.drawable.ic_launcher);
+				//listItem.setItemIcon(R.drawable.ic_menu_add);
 				listItem.setItemSubName(item.getDescr());
 				listItem.setItemTextRight(""+item.getQuantity());
 				final int pos = position;
@@ -111,7 +111,7 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 		// dummy data for testing
 		itemsToReturn.add(new InventoryItem("Pizza", "Yummy", 13, 2.4, "lbs"));
 		itemsToReturn.add(new InventoryItem("Shoes", "Running shoes", 4, .57, "lbs"));
-		itemsToReturn.add(new InventoryItem("Beer", "Bush 24 pk", 2, 36, "lbs"));
+		itemsToReturn.add(new InventoryItem("Beer", "Busch Light 24 pk", 2, 36, "lbs"));
 		itemsToReturn.add(new InventoryItem("TV Remote", "Remote for Samsung", 0, 0.13, "lbs"));
 		itemsToReturn.add(new InventoryItem("Dog", "Mix Breeds", 2, 48, "lbs"));
 		
