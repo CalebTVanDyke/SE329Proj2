@@ -27,6 +27,7 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 	
 	View rootView;
 	private ListView itemsListView;
+	private BaseAdapter listViewAdapter;
 	private ArrayList<InventoryItem> items = new ArrayList<InventoryItem>();
 	
 	@Override
@@ -50,7 +51,7 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 			getFragmentManager().popBackStack();
 			return true;
 		} else if (itemId == R.id.add_item_butt) {
-			launchItemPopup(true, null);
+			launchItemPopup(true, null, items.size()+1);// true: new, true: editing, null: not passing in an item.
 			return true;
 		}
 	    return super.onOptionsItemSelected(item);
@@ -60,24 +61,28 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 	private void setUpItemsList() {
 		
 		items = getInventoryItems();
-		
-		itemsListView = (ListView) rootView.findViewById(R.id.extras_list_view);
-		itemsListView.setAdapter(new BaseAdapter() {
+		itemsListView = (ListView) rootView.findViewById(R.id.items_list_view);
+		listViewAdapter = new BaseAdapter() {
 			
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
 				
-				ListItemView item = new ListItemView(getActivity());
-				item.setItemName(items.get(position).getName());
+				InventoryItem item = items.get(position);
+				ListItemView listItem = new ListItemView(getActivity());
+				listItem.setItemName(item.getName());
+				listItem.setItemIcon(R.drawable.ic_launcher);
+				listItem.setItemSubName(item.getDescr());
+				listItem.setItemTextRight(""+item.getQuantity());
 				final int pos = position;
-				item.setOnClickListener(new OnClickListener() {
+				listItem.setOnClickListener(new OnClickListener() {
 					
 					@Override
 					public void onClick(View v) {
 						Log.i("List", items.get(pos).getName()+" pressed...");
+						launchItemPopup(false, items.get(pos), pos);
 					}
 				});
-				return item;
+				return listItem;
 			}
 			
 			@Override
@@ -94,7 +99,9 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 			public int getCount() {
 				return items.size();
 			}
-		});
+		};
+		
+		itemsListView.setAdapter(listViewAdapter);
 		
 	}
 
@@ -111,21 +118,30 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 		return itemsToReturn;
 	}
 	
-	private void launchItemPopup(boolean isNew, InventoryItem item){
+	private void launchItemPopup(boolean isNew,  InventoryItem item, int pos){
 
-		PopupActivity.popup(this, getActivity(), 1, new ItemPopup(isNew, item));
+		PopupActivity.popup(this, getActivity(), 1, new ItemPopup(isNew, item, pos));
 	}
 	
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+		Log.i("Result", "@@@ Returned with resultCode: " + resultCode);
+		
 		if (requestCode == 1) {
-			if(resultCode == 69){
+			if(resultCode == 777){ //save new item
 				InventoryItem item = (InventoryItem) data.getExtras().getSerializable("item");
 				items.add(item);
+			}
+			else if(resultCode == 666){ //delete item
+				int toDelete = data.getExtras().getInt("to_delete");
+				items.remove(toDelete);
+				
+				//TODO Remove from Inventory.
 			}
 			else{
 				Log.i("Item", "Cancel item add/edit. Result Code: "+ resultCode);
 			}
+			listViewAdapter.notifyDataSetChanged();
 		}
 	}
 	

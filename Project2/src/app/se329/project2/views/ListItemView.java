@@ -19,8 +19,8 @@ public class ListItemView extends LinearLayout{
 	View root;
 	TextView textView;
 	TextView subTextView;
+	TextView textViewRight;
 	ImageView iconImageView;
-	ImageView iconImageViewRight;
 	
 	String attrText;
 	
@@ -61,7 +61,7 @@ public class ListItemView extends LinearLayout{
             textView = (TextView) root.findViewById(R.id.list_item_textview);
             subTextView = (TextView) root.findViewById(R.id.list_item_subtextview);
             iconImageView = (ImageView) root.findViewById(R.id.list_item_icon);
-            iconImageViewRight = (ImageView) root.findViewById(R.id.list_item_icon_right);
+            textViewRight = (TextView) root.findViewById(R.id.list_item_text_right);
         }
 	}
 	
@@ -100,15 +100,10 @@ public class ListItemView extends LinearLayout{
 //		}.execute(imageUrl);
 	}
 	
-	public void setItemIconRight(int resource)
+	public void setItemTextRight(String text)
 	{
-		iconImageViewRight.setImageDrawable(getContext().getResources().getDrawable(resource));
-		iconImageViewRight.setVisibility(VISIBLE);
-	}
-	
-	public void reset(){
-		subTextView.setVisibility(GONE);
-		iconImageView.setVisibility(GONE);
+		textViewRight.setText(text);
+		textViewRight.setVisibility(VISIBLE);
 	}
 	
 	public void setItemSubName(String sub){
@@ -116,25 +111,4 @@ public class ListItemView extends LinearLayout{
 		subTextView.setText(sub);
 	}
 	
-	public String getItemSubName(){
-		return subTextView.getText().toString();
-	}
-	
-	public void setTextwithIndicator(String name)
-	{
-		this.setItemName(name);
-		this.setItemIconRight(R.drawable.ic_disclosure_indicator);
-	}
-	
-	public void setTextWithEmptyStar(String name)
-	{
-		this.setItemName(name);
-		this.setItemIconRight(R.drawable.ic_empty_star);
-	}
-	
-	public void setTextWithFullStar(String name)
-	{
-		this.setItemName(name);
-		this.setItemIconRight(R.drawable.ic_full_star);
-	}
 }

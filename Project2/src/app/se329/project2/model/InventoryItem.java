@@ -57,7 +57,11 @@ public class InventoryItem implements Serializable {
 	}
 
 	public void setTotalWeight() {
-		this.totalWeight = ""+quantity*unitWeight+weightUnits;
+		this.totalWeight = ""+quantity*unitWeight;
+	}
+
+	public String getWeightUnits() {
+		return weightUnits;
 	}
 	
 }

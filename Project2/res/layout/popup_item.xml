@@ -11,13 +11,13 @@
         android:padding="30dp" >
         
         <ScrollView
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true">
 
             <RelativeLayout
                 android:id="@+id/popup_container"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
@@ -33,7 +33,7 @@
                     android:layout_alignParentTop="true" >
 
                     <TextView
-                        android:id="@+id/item_name_textview"
+                        android:id="@+id/title_textview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
@@ -47,9 +47,32 @@
                         android:id="@+id/frameLayout3"
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
-                        android:layout_below="@+id/item_name_textview"
+                        android:layout_below="@+id/title_textview"
                         android:background="@color/blue" >
                     </FrameLayout>
+
+                    <ImageButton
+                        android:id="@+id/edit_butt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_toLeftOf="@+id/del_butt"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="5dp"
+                        android:background="@color/transparent"
+                        android:visibility="visible"
+                        android:src="@android:drawable/ic_menu_edit" />
+                    
+                    <ImageButton
+                        android:id="@+id/del_butt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="14dp"
+                        android:background="@color/transparent"
+                        android:visibility="visible"
+                        android:src="@android:drawable/ic_menu_delete" />
+
                 </RelativeLayout>
                 
                 
@@ -154,13 +177,23 @@
                         android:id="@+id/item_weight_field"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
-                        android:layout_toRightOf="@+id/item_weight_text"
+                        android:gravity="right"
+                        android:layout_centerHorizontal="true"
+                        android:hint="Weight"
+                        android:inputType="numberDecimal"
+                        android:padding="14dp"
+                        android:textColor="#000000" />
+                    
+                    <EditText
+                        android:id="@+id/item_weight_unit_field"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/item_weight_field"
+                        android:layout_toRightOf="@+id/item_weight_field"
                         android:gravity="center"
                         android:padding="14dp"
-                        android:hint="Lbs"
-                        android:inputType="numberDecimal" 
+                        android:hint="Units"
                         android:textColor="#000000" />
 
                     <FrameLayout
@@ -191,7 +224,7 @@
                         android:gravity="center"
                         android:padding="14dp"
                         android:hint="Description"
-                        android:inputType="text" 
+                        android:inputType="textMultiLine" 
                         android:textColor="#000000" />
 
                     <TextView
@@ -267,15 +300,6 @@
                         android:background="@color/gray" >
                     </FrameLayout>
                 </RelativeLayout>
-                
-                <ProgressBar
-                    android:id="@+id/reg_loading"
-                    style="?android:attr/progressBarStyleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:visibility="invisible" />
 
             </RelativeLayout>
         </ScrollView>
