@@ -22,6 +22,8 @@ public abstract class ProjectFragment extends Fragment{
 	protected AsyncTask<?, ?, ?> currentAsyncTask;
 	static float lastT = 0.0f;
 	
+	public String activeUser = "";
+	
 	boolean allowed = true;
 	
 	/**
@@ -72,10 +74,7 @@ public abstract class ProjectFragment extends Fragment{
 		getSupportActionBar().setTitle(getTitle());
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getActionBarColor()));
 		super.onResume();
-
 	}
-	
-	
 	
 	@Override
 	public void onPause() {
@@ -96,7 +95,7 @@ public abstract class ProjectFragment extends Fragment{
 	}
 	
 	public int getActionBarColor(){
-		return isAdded() ? getActivity().getResources().getColor(R.color.red) : -1;
+		return isAdded() ? getActivity().getResources().getColor(R.color.blue) : -1;
 	}
 	
 	/**

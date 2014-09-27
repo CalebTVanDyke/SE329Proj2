@@ -2,6 +2,7 @@ package app.se329.project2;
 
 import java.lang.reflect.Field;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,20 +34,12 @@ public class MainActivity extends ActionBarActivity {
 	private ActionBarDrawerToggle drawerToggle;
 	private ListView navigationDrawerView;
 
-	// Shared Preference Strings.
-	static public final String DEFAULT_SHARED_PREF = "default shared preferences";
-
 	// First Level Frag used to track what level the fragment transaction is
 	// happening on.
 	static public final String FIRST_LEVEL_FRAGMENT = "FirstLevelFrag";
 
 	private ProjectFragment currentFragment;
 	private int selectedItem;
-
-	private ImageView navigationDrawerBackground;
-
-	// HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName,
-	// Tracker>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -142,9 +136,13 @@ public class MainActivity extends ActionBarActivity {
 			Bundle selectedFragmentBundle = new Bundle();
 
 			if (fragmentTitle.contentEquals("Home")) {
-				selectedFragment = new LoginFragment();
-			} else {
-				selectedFragment = new LoginFragment();
+				selectedFragment = new HomeFragment();
+			} 
+			else if (fragmentTitle.contentEquals("Items")){
+				selectedFragment = new ItemsFragment();
+			} 
+			else{
+				selectedFragment = null;
 			}
 
 			selectedFragmentBundle.putBoolean(FIRST_LEVEL_FRAGMENT, false);
@@ -208,22 +206,12 @@ public class MainActivity extends ActionBarActivity {
 		R.string.drawer_close /* "close drawer" description */
 		) {
 
-			/** Called when a drawer has settled in a completely closed state. */
-			public void onDrawerClosed(View view) {
-
-			}
-
-			/** Called when a drawer has settled in a completely open state. */
-			public void onDrawerOpened(View drawerView) {
-
-			}
-
 			@Override
 			public void onDrawerSlide(View drawerView, float slideOffset) {
 
 				// Parallax effect
-				int x = (int) (navigationDrawerBackground.getWidth() * (1 - slideOffset) * 0.7);
-				navigationDrawerBackground.layout(x, navigationDrawerBackground.getTop(), x + navigationDrawerBackground.getWidth(), navigationDrawerBackground.getBottom());
+//				int x = (int) (navigationDrawerBackground.getWidth() * (1 - slideOffset) * 0.7);
+//				navigationDrawerBackground.layout(x, navigationDrawerBackground.getTop(), x + navigationDrawerBackground.getWidth(), navigationDrawerBackground.getBottom());
 
 				super.onDrawerSlide(drawerView, slideOffset);
 			}
@@ -257,9 +245,6 @@ public class MainActivity extends ActionBarActivity {
 				selectMenuItem(position);
 			}
 		});
-
-		// Setup navigation background
-		navigationDrawerBackground.setColorFilter(Color.argb(150, 0, 0, 0));
 
 	}
 
@@ -324,7 +309,11 @@ public class MainActivity extends ActionBarActivity {
 
 	private void setupViews() {
 		navigationDrawerView = (ListView) findViewById(R.id.navigation_drawer);
-		navigationDrawerBackground = (ImageView) findViewById(R.id.navigation_drawer_background);
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 }

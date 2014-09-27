@@ -20,10 +20,7 @@
             android:id="@+id/navigation_drawer_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:tint="#ca1a1a1a"
-            android:scaleType="centerCrop"
-            android:background="#0F0F0F"
-            android:src="@drawable/nav_back_1"
+            android:background="#222222"
             android:contentDescription="@string/app_name"/>
 
         <ListView

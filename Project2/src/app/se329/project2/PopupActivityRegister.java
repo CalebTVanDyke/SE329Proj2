@@ -20,14 +20,14 @@ class RegisterPopup extends Popup {
 
 	public void configureButtonPresses(View popupContent) {
 		
-		popupContent.findViewById(R.id.register_user_butt).setOnClickListener(new OnClickListener() {
+		popupContent.findViewById(R.id.okay_butt).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				attemptRegister();
 			}
 		});
 		
-		popupContent.findViewById(R.id.cancel_reg_butt).setOnClickListener(new OnClickListener() {
+		popupContent.findViewById(R.id.cancel_butt).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				closePopup();
@@ -55,9 +55,9 @@ class RegisterPopup extends Popup {
 	private void attemptRegister(){
 		
 		// Get text field values. Store in final strings.
-		EditText username = (EditText) popupActivity.findViewById(R.id.username_reg_field);
-		EditText pass = (EditText) popupActivity.findViewById(R.id.pass_reg_field);
-		EditText passConf = (EditText) popupActivity.findViewById(R.id.conf_pass_field);
+		EditText username = (EditText) popupActivity.findViewById(R.id.item_name_field);
+		EditText pass = (EditText) popupActivity.findViewById(R.id.item_quantity_field);
+		EditText passConf = (EditText) popupActivity.findViewById(R.id.item_descr_field);
 		final String userToEnter = username.getText().toString();
 		final String passToEnter = pass.getText().toString();
 		final String passToConf = passConf.getText().toString();

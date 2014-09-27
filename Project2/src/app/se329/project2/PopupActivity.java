@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,14 +50,19 @@ public class PopupActivity extends ActionBarActivity implements OnClickListener{
 
 	/**
 	 * Creates a popup using a request code and adapter for handling activity results
+	 * @param itemsFragment 
 	 * @param activity The root activity the popup show appear on
 	 * @param requestCode The given request code to handle results
 	 * @param popup The popup that will be shown
 	 */
-	public static void popup(FragmentActivity activity, int requestCode, Popup adapter) {
+	public static void popup(ItemsFragment itemsFragment, FragmentActivity activity, int requestCode, Popup adapter) {
 		Intent intent = new Intent(activity, PopupActivity.class);
 		if(REQUEST_CODE_MISSING==requestCode) activity.startActivity(intent);
-		else activity.startActivityForResult(intent,requestCode);
+		else {
+			Log.i("Activity", "Starting activity for result. Request Code: " + requestCode);
+			itemsFragment.startActivityForResult(intent,requestCode);
+		}
+		
 		activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 		popupAdapter = adapter;
 	}
@@ -68,7 +74,7 @@ public class PopupActivity extends ActionBarActivity implements OnClickListener{
 	 * @param canClose Whether the popup can close or not
 	 */
 	public static void popup(FragmentActivity activity, Popup adapter, boolean canClose) {
-		popup(activity, REQUEST_CODE_MISSING, adapter);
+		popup(null, activity, REQUEST_CODE_MISSING, adapter);
 		closable = canClose;
 	}
 
@@ -131,6 +137,7 @@ abstract class Popup{
 	 * @param data Intent data returned by popup activity
 	 */
 	public void closePopup(int resultCode, Intent data){
+		Log.i("Result", "--- Closing Popup. Result Code: " + resultCode);
 		popupActivity.setResult(resultCode, data);
 		popupActivity.closePopup();
 	}

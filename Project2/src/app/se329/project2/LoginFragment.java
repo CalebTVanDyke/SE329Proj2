@@ -29,7 +29,7 @@ public class LoginFragment extends ProjectFragment{
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     	
-		rootView = inflater.inflate(R.layout.fragment_home, container, false);
+		rootView = inflater.inflate(R.layout.fragment_login, container, false);
 		setupInitial(rootView);
 		
 		return rootView;
@@ -62,9 +62,8 @@ public class LoginFragment extends ProjectFragment{
 				rootView.findViewById(R.id.reg_loading_home).setVisibility(View.INVISIBLE);
 				if(result.contains(passToVerify)){
 					Log.i("User", "Sign on success!");
-					boolean newUser = new MyJsonUtil(rootView.getContext()).verifyLocalUser(userToVerify, passToVerify);
-					// TODO take user to their home!
-					promptUser("NAILED IT!", "Damn them credentials be matchin server mighty nice.");
+					boolean isNewUser = new MyJsonUtil(rootView.getContext()).verifyLocalUser(userToVerify, passToVerify);
+					launchUserHome(userToVerify, isNewUser);
 				}
 				else if(result.equals("ER"))promptUser("Network Error", "Please check network connection and try again.");
 				else promptUser("Login Failure", "Incorrect username or password.");
@@ -73,6 +72,15 @@ public class LoginFragment extends ProjectFragment{
 		
 	}
 
+    private void launchUserHome(String userToVerify, boolean isNewUser) {
+    	
+    	MainActivity activity = (MainActivity) getSupportActivity();
+		Bundle arguments = new Bundle();
+		arguments.putString("sessionUser", userToVerify);
+    	HomeFragment homeFragment = new HomeFragment();
+    	activity.setContent(homeFragment, arguments, getSupportActionBar().getTitle().toString());
+	}
+    
 	private void launchRegisterPopup() {
 		PopupActivity.closable = true;
 		PopupActivity.popup(getActivity(),new RegisterPopup(), false);
