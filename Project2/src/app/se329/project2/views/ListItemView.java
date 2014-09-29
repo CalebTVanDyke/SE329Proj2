@@ -28,6 +28,10 @@ public class ListItemView extends LinearLayout{
 		super(context);
 		sharedConstructor(context);
 	}
+	public ListItemView(Context context, String title, String subTitle, int resource) {
+		super(context);
+		sharedConstructor(context);
+	}
 	
 	public ListItemView(Context context, AttributeSet attrs){
 		super(context,attrs);

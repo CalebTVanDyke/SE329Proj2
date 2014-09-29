@@ -2,6 +2,7 @@ package app.se329.project2;
 
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -70,7 +71,7 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 				InventoryItem item = items.get(position);
 				ListItemView listItem = new ListItemView(getActivity());
 				listItem.setItemName(item.getName());
-				//listItem.setItemIcon(R.drawable.ic_menu_add);
+				//listItem.setItemIcon();
 				listItem.setItemSubName(item.getDescr());
 				listItem.setItemTextRight(""+item.getQuantity());
 				final int pos = position;
@@ -78,7 +79,6 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 					
 					@Override
 					public void onClick(View v) {
-						Log.i("List", items.get(pos).getName()+" pressed...");
 						launchItemPopup(false, items.get(pos), pos);
 					}
 				});
@@ -109,12 +109,14 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 		ArrayList<InventoryItem> itemsToReturn = new ArrayList<InventoryItem>();
 		
 		// dummy data for testing
-		itemsToReturn.add(new InventoryItem("Pizza", "Yummy", 13, 2.4, "lbs"));
-		itemsToReturn.add(new InventoryItem("Shoes", "Running shoes", 4, .57, "lbs"));
-		itemsToReturn.add(new InventoryItem("Beer", "Busch Light 24 pk", 2, 36, "lbs"));
-		itemsToReturn.add(new InventoryItem("TV Remote", "Remote for Samsung", 0, 0.13, "lbs"));
-		itemsToReturn.add(new InventoryItem("Dog", "Mix Breeds", 2, 48, "lbs"));
+//		itemsToReturn.add(new InventoryItem("Pizza", "Yummy", 13, 2.4, "lbs"));
+//		itemsToReturn.add(new InventoryItem("Shoes", "Running shoes", 4, .57, "lbs"));
+//		itemsToReturn.add(new InventoryItem("Beer", "Busch Light 24 pk", 2, 36, "lbs"));
+//		itemsToReturn.add(new InventoryItem("TV Remote", "Remote for Samsung", 0, 0.13, "lbs"));
+//		itemsToReturn.add(new InventoryItem("Dog", "Mix Breeds", 2, 48, "lbs"));
 		
+		if(itemsToReturn.size()==0)
+			promptUser("Inventory", "It looks like you have no items! Click the add button at the top to create one!");
 		return itemsToReturn;
 	}
 	
@@ -130,7 +132,7 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 		if (requestCode == 1) {
 			if(resultCode == 777){ //save new item
 				InventoryItem item = (InventoryItem) data.getExtras().getSerializable("item");
-				items.add(item);
+				addItem(item);
 			}
 			else if(resultCode == 666){ //delete item
 				int toDelete = data.getExtras().getInt("to_delete");
@@ -145,8 +147,23 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 		}
 	}
 	
+	private void addItem(InventoryItem item) {
+		items.add(item);
+		
+	}
+
 	@Override
 	public void onClick(View v) {
 		ListItemView view = (ListItemView) v;
+	}
+	
+	private void promptUser(String title, String message){
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(rootView.getContext());
+		alertDialogBuilder.setTitle(title);
+		alertDialogBuilder
+			.setMessage(message)
+			.setCancelable(false)
+			.setPositiveButton("Okay", null);
+		alertDialogBuilder.create().show();
 	}
 }

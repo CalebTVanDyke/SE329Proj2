@@ -19,6 +19,7 @@ import app.se329.project2.model.InventoryItem;
 class ItemPopup extends Popup {
 
 	boolean isNewItem;
+	boolean editing = true;
 	int position;
 	InventoryItem item;
 	
@@ -35,8 +36,9 @@ class ItemPopup extends Popup {
 		
 		
 		if(!isNewItem) {
-			
-			inflateTextFields(popupContent, false); // inflate with item data
+			editing = false;
+			// inflate with item data
+			inflateTextFields(popupContent, false); 
 			
 			//hide soft keyboard
 			popupActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -50,6 +52,7 @@ class ItemPopup extends Popup {
 				public void onClick(View v) {
 					inflateTextFields(popupActivity.getPopupContent(), true);
 					popupActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+					editing = true;
 				}
 			});
 			
@@ -133,7 +136,9 @@ class ItemPopup extends Popup {
 				
 				Intent data = new Intent();
 				data.putExtra("item", item);
-				closePopup(777, data);
+				
+				if(editing)closePopup(777, data);
+				else closePopup(0, data);
 			}
 		});
 		

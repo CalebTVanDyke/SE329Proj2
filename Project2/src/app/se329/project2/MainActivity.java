@@ -33,6 +33,9 @@ public class MainActivity extends ActionBarActivity {
 	static DrawerLayout drawerLayout;
 	private ActionBarDrawerToggle drawerToggle;
 	private ListView navigationDrawerView;
+	
+	private String sessionUser = null;
+	private boolean isNewUser;
 
 	// First Level Frag used to track what level the fragment transaction is
 	// happening on.
@@ -97,13 +100,17 @@ public class MainActivity extends ActionBarActivity {
 	public void onBackPressed() {
 		getSupportActionBar().setSubtitle(null);
 
-		if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
 			if (getSupportActionBar().getTitle().toString().equals("Home"))
-				finish();
+				moveTaskToBack(true);
 
 			Bundle bundle = new Bundle();
 			bundle.putBoolean(FIRST_LEVEL_FRAGMENT, true);
-			setContent(new LoginFragment(), bundle, "Home");
+			
+			if(sessionUser != null)
+				setContent(new HomeFragment(), bundle, "Home");
+			else
+				setContent(new LoginFragment(), bundle, "Login");
 		} else if (currentFragment != null) {
 			if (currentFragment.onBackPressed() == false)
 				super.onBackPressed();
@@ -111,19 +118,11 @@ public class MainActivity extends ActionBarActivity {
 			super.onBackPressed();
 	}
 
-	public void retryConnection(View v) {
-		setDefaultFragment();
-		setContentView(R.layout.activity_main);
-		setupViews();
-		setupNavigationDrawer();
-	}
-
 	/**
 	 * Handles selecting and switching fragments for the given position in the
 	 * navigation menu
 	 * 
 	 * @param position
-	 *            The position index of the naviagtion menu item
 	 * @return the selected position
 	 */
 	public int selectMenuItem(int position) {
@@ -300,11 +299,10 @@ public class MainActivity extends ActionBarActivity {
 	 */
 	private void setDefaultFragment() {
 		(currentFragment = new LoginFragment()).setArguments(new Bundle());
-		String firstItem = Navigation.getItems(this)[0];
-		getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, currentFragment, firstItem).commit();
+		getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, currentFragment, "Login").commit();
 
 		// Makes the first action bar title the app name
-		getSupportActionBar().setTitle("Home");
+		getSupportActionBar().setTitle("Login");
 	}
 
 	private void setupViews() {
@@ -315,5 +313,16 @@ public class MainActivity extends ActionBarActivity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	public void setSessionUser(String user, boolean isnewuser) {
+		sessionUser = user;
+		isNewUser = isnewuser;
+	}
+	public String getSessionUser() {
+		return sessionUser;
+	}
+	public boolean isNewUser() {
+		return isNewUser;
 	}
 }

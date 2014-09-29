@@ -2,6 +2,7 @@ package app.se329.project2;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -13,9 +14,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -36,6 +39,9 @@ public class LoginFragment extends ProjectFragment{
     }
 
     private void attemptLogin() {
+    	InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+    	imm.hideSoftInputFromWindow(rootView.getWindowToken(), 0);
+    	
     	EditText username = (EditText) rootView.findViewById(R.id.username_field);
 		EditText pass = (EditText) rootView.findViewById(R.id.pass_field);
 		final String userToVerify = username.getText().toString();
@@ -51,17 +57,15 @@ public class LoginFragment extends ProjectFragment{
 			@Override
 			protected String doInBackground(String... params) {
 				
-				// query to see if username is available.
 				String verifyUser = "Select Password from Users where Username = '"+userToVerify+"';";
 				String result = dbAccess.query(verifyUser);// should return null if no matches found.
 
-				return result;// User Already Exists
+				return result;
 			}
 			
 			protected void onPostExecute(String result) {
 				rootView.findViewById(R.id.reg_loading_home).setVisibility(View.INVISIBLE);
 				if(result.contains(passToVerify)){
-					Log.i("User", "Sign on success!");
 					boolean isNewUser = new MyJsonUtil(rootView.getContext()).verifyLocalUser(userToVerify, passToVerify);
 					launchUserHome(userToVerify, isNewUser);
 				}
@@ -75,10 +79,10 @@ public class LoginFragment extends ProjectFragment{
     private void launchUserHome(String userToVerify, boolean isNewUser) {
     	
     	MainActivity activity = (MainActivity) getSupportActivity();
-		Bundle arguments = new Bundle();
-		arguments.putString("sessionUser", userToVerify);
+    	activity.setSessionUser(userToVerify, isNewUser);
     	HomeFragment homeFragment = new HomeFragment();
-    	activity.setContent(homeFragment, arguments, getSupportActionBar().getTitle().toString());
+    	Bundle arguments = new Bundle();
+    	activity.setContent(homeFragment, arguments, "Home");
 	}
     
 	private void launchRegisterPopup() {
