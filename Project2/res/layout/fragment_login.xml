@@ -45,72 +45,89 @@
             </RelativeLayout>
 
         </FrameLayout>
+        
+        
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/context_bar"
+        android:layout_centerHorizontal="true" >
 
-    <EditText
-        android:id="@+id/pass_field"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/username_field"
-        android:layout_below="@+id/username_field"
-        android:hint="Password"
-        android:ems="10"
-        android:inputType="textPassword" />
+        <ImageView
+            android:id="@+id/picture_center"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+           	android:alpha="0.03"
+           	android:scaleType="fitCenter"
+            android:src="@drawable/box_bud_big" />
 
-    <EditText
-        android:id="@+id/username_field"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:hint="Username"
-        android:inputType="textPersonName" 
-        android:ems="10" >
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/username_field"
+            android:layout_alignLeft="@+id/pass_field"
+            android:layout_centerHorizontal="true"
+            android:text="Please Sign In:"
+            android:textColor="@color/blue" />
 
-    </EditText>
+        <ProgressBar
+            android:id="@+id/reg_loading_home"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/textView2"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/username_field"
-        android:layout_alignLeft="@+id/pass_field"
-        android:layout_centerHorizontal="true"
-        android:text="Please Sign In:"
-        android:textColor="@color/blue" />
+        <Button
+            android:id="@+id/locallogin_butt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/pass_field"
+            android:layout_below="@+id/pass_field"
+            android:onClick="loginLocal"
+            android:text="Sign in" />
 
-    <ProgressBar
-        android:id="@+id/reg_loading_home"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/textView2"
-        android:layout_centerHorizontal="true"
-        android:visibility="invisible" />
+        <TextView
+            android:id="@+id/new_user_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/locallogin_butt"
+            android:layout_centerHorizontal="true"
+            android:text="New User?"
+            android:textColor="@color/blue" />
 
-    <Button
-        android:id="@+id/locallogin_butt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/pass_field"
-        android:layout_below="@+id/pass_field"
-        android:onClick="loginLocal"
-        android:text="Sign in" />
+        <Button
+            android:id="@+id/signup_butt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/new_user_text"
+            android:layout_centerHorizontal="true"
+            android:text="Sign Up" />
 
-    <TextView
-        android:id="@+id/new_user_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/locallogin_butt"
-        android:layout_centerHorizontal="true"
-        android:text="New User?"
-        android:textColor="@color/blue" />
+        <EditText
+            android:id="@+id/pass_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/username_field"
+            android:layout_centerVertical="true"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword" />
 
-    <Button
-        android:id="@+id/signup_butt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/new_user_text"
-        android:layout_centerHorizontal="true"
-        android:text="Sign Up" />
+        <EditText
+            android:id="@+id/username_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/pass_field"
+            android:layout_centerHorizontal="true"
+            android:ems="10"
+            android:hint="Username"
+            android:inputType="textPersonName" />
+
+    </RelativeLayout>
     
 </RelativeLayout>

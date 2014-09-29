@@ -74,7 +74,7 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 				InventoryItem item = inventory.getItems().get(position);
 				ListItemView listItem = new ListItemView(getActivity());
 				listItem.setItemName(item.getName());
-				//listItem.setItemIcon();
+				listItem.setItemIcon(R.drawable.box_bud);
 				listItem.setItemSubName(item.getDesc());
 				listItem.setItemTextRight(""+item.getQuantity());
 				final int pos = position;

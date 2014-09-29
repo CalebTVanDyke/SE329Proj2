@@ -9,16 +9,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/dark_overlay"
-            android:paddingTop="15dp"
+            android:paddingTop="5dp"
             android:paddingBottom="@dimen/padding_small">
 
             <RelativeLayout
                 android:id="@+id/title_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/padding_medium"
-                android:paddingLeft="@dimen/padding_medium"
-                android:paddingRight="@dimen/padding_medium" >
+                android:layout_height="match_parent">
 
                 <TextView
                     android:id="@+id/user_name_text"
@@ -26,8 +23,9 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/title2"
                     android:layout_centerHorizontal="true"
-                    android:text=""
+                    android:text="Username Here"
                     android:textColor="@color/blue"
+                    android:padding="0dp"
                     android:textSize="36sp"
                     android:textStyle="bold" />
 
@@ -45,16 +43,21 @@
             </RelativeLayout>
 
         </FrameLayout>
-    
-	    <ListView
-	        android:id="@+id/home_menu_list_view"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_below="@+id/context_bar"
-	        android:clipToPadding="false"
-	        android:padding="@dimen/padding_medium"
-	        android:scrollbarStyle="outsideOverlay" >
 
-	    </ListView>
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/context_bar"
+            android:layout_centerHorizontal="true" >
+
+            <ImageView
+                android:id="@+id/picture_center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/box_bud_big" />
+            
+        </RelativeLayout>
     
 </RelativeLayout>
