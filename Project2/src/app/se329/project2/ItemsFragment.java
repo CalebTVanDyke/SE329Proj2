@@ -16,7 +16,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import app.se329.project2.model.Inventory;
 import app.se329.project2.model.InventoryItem;
+import app.se329.project2.util.MyJsonUtil;
 import app.se329.project2.views.ListItemView;
 
 /**
@@ -27,13 +29,15 @@ import app.se329.project2.views.ListItemView;
 public class ItemsFragment extends ProjectFragment implements OnClickListener {
 	
 	View rootView;
+	Inventory inventory;
 	private ListView itemsListView;
 	private BaseAdapter listViewAdapter;
-	private ArrayList<InventoryItem> items = new ArrayList<InventoryItem>();
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_items, null,false);
+		
+		getInventoryItems();
 		
 		setUpItemsList();
 		return rootView;
@@ -52,7 +56,7 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 			getFragmentManager().popBackStack();
 			return true;
 		} else if (itemId == R.id.add_item_butt) {
-			launchItemPopup(true, null, items.size()+1);// true: new, true: editing, null: not passing in an item.
+			launchItemPopup(true, null, inventory.getItems().size()+1);// true: new, null: not passing in an item.
 			return true;
 		}
 	    return super.onOptionsItemSelected(item);
@@ -61,25 +65,24 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 	
 	private void setUpItemsList() {
 		
-		items = getInventoryItems();
 		itemsListView = (ListView) rootView.findViewById(R.id.items_list_view);
 		listViewAdapter = new BaseAdapter() {
 			
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
 				
-				InventoryItem item = items.get(position);
+				InventoryItem item = inventory.getItems().get(position);
 				ListItemView listItem = new ListItemView(getActivity());
 				listItem.setItemName(item.getName());
 				//listItem.setItemIcon();
-				listItem.setItemSubName(item.getDescr());
+				listItem.setItemSubName(item.getDesc());
 				listItem.setItemTextRight(""+item.getQuantity());
 				final int pos = position;
 				listItem.setOnClickListener(new OnClickListener() {
 					
 					@Override
 					public void onClick(View v) {
-						launchItemPopup(false, items.get(pos), pos);
+						launchItemPopup(false, inventory.getItems().get(pos), pos);
 					}
 				});
 				return listItem;
@@ -92,12 +95,12 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 			
 			@Override
 			public Object getItem(int position) {
-				return items.get(position);
+				return inventory.getItems().get(position);
 			}
 			
 			@Override
 			public int getCount() {
-				return items.size();
+				return inventory.getItems().size();
 			}
 		};
 		
@@ -106,18 +109,13 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 	}
 
 	private ArrayList<InventoryItem> getInventoryItems() {
-		ArrayList<InventoryItem> itemsToReturn = new ArrayList<InventoryItem>();
 		
-		// dummy data for testing
-//		itemsToReturn.add(new InventoryItem("Pizza", "Yummy", 13, 2.4, "lbs"));
-//		itemsToReturn.add(new InventoryItem("Shoes", "Running shoes", 4, .57, "lbs"));
-//		itemsToReturn.add(new InventoryItem("Beer", "Busch Light 24 pk", 2, 36, "lbs"));
-//		itemsToReturn.add(new InventoryItem("TV Remote", "Remote for Samsung", 0, 0.13, "lbs"));
-//		itemsToReturn.add(new InventoryItem("Dog", "Mix Breeds", 2, 48, "lbs"));
+		inventory = new Inventory(rootView.getContext(), getSupportActivity().getSessionUser(), getSupportActivity().getCurrentInventory());
+		inventory.inflateInventory(inventory.getUser(), inventory.getName());
 		
-		if(itemsToReturn.size()==0)
+		if(inventory.getItems().size()==0)
 			promptUser("Inventory", "It looks like you have no items! Click the add button at the top to create one!");
-		return itemsToReturn;
+		return inventory.getItems();
 	}
 	
 	private void launchItemPopup(boolean isNew,  InventoryItem item, int pos){
@@ -132,13 +130,17 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 		if (requestCode == 1) {
 			if(resultCode == 777){ //save new item
 				InventoryItem item = (InventoryItem) data.getExtras().getSerializable("item");
-				addItem(item);
+				addItem(item, inventory.getItems().size());
 			}
 			else if(resultCode == 666){ //delete item
 				int toDelete = data.getExtras().getInt("to_delete");
-				items.remove(toDelete);
-				
-				//TODO Remove from Inventory.
+				removeItem(toDelete);
+			}
+			else if(resultCode == 888){ //replace/edit item
+				int toReplace = data.getExtras().getInt("to_replace");
+				removeItem(toReplace);
+				InventoryItem item = (InventoryItem) data.getExtras().getSerializable("item");
+				addItem(item, toReplace);
 			}
 			else{
 				Log.i("Item", "Cancel item add/edit. Result Code: "+ resultCode);
@@ -146,10 +148,14 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 			listViewAdapter.notifyDataSetChanged();
 		}
 	}
-	
-	private void addItem(InventoryItem item) {
-		items.add(item);
-		
+
+	private void addItem(InventoryItem item, int insertionIndex) {
+		inventory.getItems().add(insertionIndex, item);
+		inventory.saveInventory();
+	}
+	private void removeItem(int toDelete) {
+		inventory.getItems().remove(toDelete);
+		inventory.saveInventory();
 	}
 
 	@Override

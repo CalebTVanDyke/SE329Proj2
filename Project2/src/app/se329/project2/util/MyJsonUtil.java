@@ -1,9 +1,11 @@
 package app.se329.project2.util;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,6 +13,8 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.util.Log;
+import app.se329.project2.model.Inventory;
+import app.se329.project2.model.InventoryItem;
 
 public class MyJsonUtil {
 
@@ -31,7 +35,7 @@ public class MyJsonUtil {
 			Log.i("JSON", filename+" contents: " + jsonText);
 		}
 		catch(FileNotFoundException e){
-			Log.e("JSON", "Local Users File not found. Starting a new.");
+			Log.e("JSON", filename+" not found. Starting a new.");
 			jsonText = "{\""+filename+"\":[]}";
 		}
 		catch(IOException e){
@@ -50,8 +54,7 @@ public class MyJsonUtil {
 			FileOutputStream fos = cntxt.openFileOutput(filename, Context.MODE_PRIVATE);
 		    fos.write(fullDataObj.toString().getBytes());
 		    fos.close();
-		    Log.i("JSON", "File: " +filename+".json updated.\nNew Contents: " 
-		    										+ fullDataObj.toString());
+		    Log.i("JSON", "File: " +filename+".json updated.\nNew Contents: " + fullDataObj.toString());
 		}
 		catch(IOException e){
 			e.printStackTrace();
@@ -102,5 +105,72 @@ public class MyJsonUtil {
 		saveToFile(filename, fullDataObj);
 		return true;
 	}
+
+	public ArrayList<InventoryItem> getInventoryItems(String userName, String inventoryName) {
+		ArrayList<InventoryItem> items = new ArrayList<InventoryItem>();
+		
+		String filename = userName + "_inv_" + inventoryName;
+		
+		//get current file contents
+		JSONObject inventJson = readFromFile(filename);
+		Log.i("JSON", filename + " received: " + inventJson.toString());
+		
+		// create new user entry
+		JSONArray itemsJsonArr = null;
+		JSONObject itemJson = null;
+		InventoryItem item = null;
+		try {
+			itemsJsonArr = inventJson.getJSONArray("items");
+			for(int i = 0; i < itemsJsonArr.length(); i++){
+				item = new InventoryItem();
+				itemJson = new JSONObject();
+				itemJson = itemsJsonArr.getJSONObject(i);
+				item.setName(itemJson.getString("item_name"));
+				item.setDescr((itemJson.getString("item_desc")));
+				item.setQuantity(Integer.parseInt(itemJson.getString("item_quan")));
+				item.setUnitWeight(Double.parseDouble(itemJson.getString("item_weight")));
+				
+				Log.i("Item", "Added item: " + item.getName());
+				items.add(item);
+			}
+			
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return items;
+	}
 	
+	public void writeInventoryItems(Inventory inventory) {
+		
+		String filename = inventory.getUser() + "_inv_" + inventory.getName();
+		ArrayList<InventoryItem> items = inventory.getItems();
+		
+		// create new user entry
+		JSONObject pushInventory = null;
+		JSONObject putItem = null;
+		JSONArray itemsList = null;
+		try {
+			pushInventory = new JSONObject();
+			itemsList = new JSONArray();
+			
+			pushInventory.put("name", inventory.getName());
+			pushInventory.put("desc", inventory.getDesc());
+			for(int i = 0 ; i < items.size(); i ++)
+			{
+				putItem = new JSONObject();
+				putItem.put("item_name", items.get(i).getName());
+				putItem.put("item_desc", items.get(i).getDesc());
+				putItem.put("item_quan", items.get(i).getQuantity());
+				putItem.put("item_weight", items.get(i).getUnitWeight());
+				putItem.put("item_weigh_unit", items.get(i).getWeightUnits());
+				
+				itemsList.put(i, putItem);
+			}
+			pushInventory.put("items", itemsList);
+			
+			saveToFile(filename, pushInventory);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
 }

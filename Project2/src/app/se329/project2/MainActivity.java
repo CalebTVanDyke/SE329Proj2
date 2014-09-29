@@ -35,6 +35,7 @@ public class MainActivity extends ActionBarActivity {
 	private ListView navigationDrawerView;
 	
 	private String sessionUser = null;
+	private String currentInventory = "default";
 	private boolean isNewUser;
 
 	// First Level Frag used to track what level the fragment transaction is
@@ -100,9 +101,11 @@ public class MainActivity extends ActionBarActivity {
 	public void onBackPressed() {
 		getSupportActionBar().setSubtitle(null);
 
-		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-			if (getSupportActionBar().getTitle().toString().equals("Home"))
+		if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+			if (getSupportActionBar().getTitle().toString().equals("Home")){
+				Log.e("Inventory Pal", "Closing the app.");
 				moveTaskToBack(true);
+			}
 
 			Bundle bundle = new Bundle();
 			bundle.putBoolean(FIRST_LEVEL_FRAGMENT, true);
@@ -112,8 +115,10 @@ public class MainActivity extends ActionBarActivity {
 			else
 				setContent(new LoginFragment(), bundle, "Login");
 		} else if (currentFragment != null) {
-			if (currentFragment.onBackPressed() == false)
+			if (currentFragment.onBackPressed() == false){
 				super.onBackPressed();
+				Log.d("Inventory Pal", "called super.onBackPressed();");
+			}
 		} else
 			super.onBackPressed();
 	}
@@ -133,9 +138,11 @@ public class MainActivity extends ActionBarActivity {
 
 			ProjectFragment selectedFragment;
 			Bundle selectedFragmentBundle = new Bundle();
-
+			selectedFragmentBundle.putBoolean(FIRST_LEVEL_FRAGMENT, false);
+			
 			if (fragmentTitle.contentEquals("Home")) {
 				selectedFragment = new HomeFragment();
+				selectedFragmentBundle.putBoolean(FIRST_LEVEL_FRAGMENT, true);
 			} 
 			else if (fragmentTitle.contentEquals("Items")){
 				selectedFragment = new ItemsFragment();
@@ -144,7 +151,6 @@ public class MainActivity extends ActionBarActivity {
 				selectedFragment = null;
 			}
 
-			selectedFragmentBundle.putBoolean(FIRST_LEVEL_FRAGMENT, false);
 			if (selectedFragment != null)
 				setContent(selectedFragment, selectedFragmentBundle, fragmentTitle);
 		}
@@ -166,8 +172,7 @@ public class MainActivity extends ActionBarActivity {
 	 *            String to show in Actionbar.
 	 */
 	public void setContent(ProjectFragment selectedFragment, Bundle arguments, String title) {
-		getSupportActionBar().setSubtitle(null); // used to remove title errors
-													// when switching fragments
+		getSupportActionBar().setSubtitle(null); // used to remove title errors when switching fragments
 		/*
 		 * Removes all previous fragments on the stack, if a back is called
 		 * immediately after this a new MainFragment should open and then exit
@@ -208,10 +213,7 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public void onDrawerSlide(View drawerView, float slideOffset) {
 
-				// Parallax effect
-//				int x = (int) (navigationDrawerBackground.getWidth() * (1 - slideOffset) * 0.7);
-//				navigationDrawerBackground.layout(x, navigationDrawerBackground.getTop(), x + navigationDrawerBackground.getWidth(), navigationDrawerBackground.getBottom());
-
+				
 				super.onDrawerSlide(drawerView, slideOffset);
 			}
 		};
@@ -322,6 +324,14 @@ public class MainActivity extends ActionBarActivity {
 	public String getSessionUser() {
 		return sessionUser;
 	}
+	
+	public void setInventory(String inven) {
+		currentInventory = inven;
+	}
+	public String getCurrentInventory() {
+		return currentInventory;
+	}
+	
 	public boolean isNewUser() {
 		return isNewUser;
 	}

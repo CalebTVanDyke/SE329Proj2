@@ -97,7 +97,7 @@ class ItemPopup extends Popup {
 		
 		EditText itemDesc = (EditText) popupContent.findViewById(R.id.item_descr_field);
 		itemDesc.setEnabled(enabled);
-		itemDesc.setText(item.getDescr());
+		itemDesc.setText(item.getDesc());
 		
 		EditText itemQuantity = (EditText) popupContent.findViewById(R.id.item_quantity_field);
 		itemQuantity.setEnabled(enabled);
@@ -137,7 +137,13 @@ class ItemPopup extends Popup {
 				Intent data = new Intent();
 				data.putExtra("item", item);
 				
-				if(editing)closePopup(777, data);
+				if(editing && !isNewItem){ // delete previous item and add new
+					data.putExtra("to_replace", position);
+					closePopup(888, data);
+				}
+				else if(editing){ // add new item
+					closePopup(777, data);
+				}
 				else closePopup(0, data);
 			}
 		});

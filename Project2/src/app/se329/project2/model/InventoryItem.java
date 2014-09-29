@@ -13,11 +13,15 @@ public class InventoryItem implements Serializable {
 
 	public InventoryItem(String itemName, String description, int quantity, double weight, String weightU){
 		setName(itemName);
-		setDescripton(description);
+		setDescr(description);
 		setQuantity(quantity);
 		setUnitWeight(weight);
 		weightUnits = weightU;
 		setTotalWeight();
+	}
+
+	public InventoryItem() {
+
 	}
 
 	public String getName() {
@@ -28,11 +32,11 @@ public class InventoryItem implements Serializable {
 		this.name = name;
 	}
 
-	public String getDescr() {
+	public String getDesc() {
 		return descr;
 	}
 
-	public void setDescripton(String descr) {
+	public void setDescr(String descr) {
 		this.descr = descr;
 	}
 
