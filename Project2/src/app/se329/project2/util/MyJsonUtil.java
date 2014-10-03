@@ -35,8 +35,11 @@ public class MyJsonUtil {
 			Log.i("JSON", filename+" contents: " + jsonText);
 		}
 		catch(FileNotFoundException e){
-			Log.e("JSON", filename+" not found. Starting a new.");
+			Log.e("JSON", filename+" not found. Creating template.");
 			jsonText = "{\""+filename+"\":[]}";
+			try {
+				saveToFile(filename, new JSONObject(jsonText));
+			} catch (JSONException e1) {e1.printStackTrace();}
 		}
 		catch(IOException e){
 			e.printStackTrace();
@@ -54,7 +57,7 @@ public class MyJsonUtil {
 			FileOutputStream fos = cntxt.openFileOutput(filename, Context.MODE_PRIVATE);
 		    fos.write(fullDataObj.toString().getBytes());
 		    fos.close();
-		    Log.i("JSON", "File: " +filename+".json updated.\nNew Contents: " + fullDataObj.toString());
+		    Log.i("JSON", "File: " +filename+" updated.\nNew Contents: " + fullDataObj.toString());
 		}
 		catch(IOException e){
 			e.printStackTrace();
@@ -86,7 +89,7 @@ public class MyJsonUtil {
 				newUserObj = usersArr.getJSONObject(i);
 				if(newUserObj.getString("username").equals(userToEnter))
 				{
-					Log.i("JSON", "Local User Found.");
+					Log.d("JSON", "Local User Found.");
 					return false;
 				}
 			}
@@ -106,16 +109,17 @@ public class MyJsonUtil {
 		return true;
 	}
 
-	public ArrayList<InventoryItem> getInventoryItems(String userName, String inventoryName) {
+	public ArrayList<InventoryItem> getInventoryItems(Inventory inventory) {
+		
+		Log.d("JSON", "Loading inventory items for: " + inventory.getName());
+		
 		ArrayList<InventoryItem> items = new ArrayList<InventoryItem>();
 		
-		String filename = userName + "_inv_" + inventoryName;
+		String filename = inventory.getUser() + "_inv_" + inventory.getId();
 		
 		//get current file contents
 		JSONObject inventJson = readFromFile(filename);
-		Log.i("JSON", filename + " received: " + inventJson.toString());
 		
-		// create new user entry
 		JSONArray itemsJsonArr = null;
 		JSONObject itemJson = null;
 		InventoryItem item = null;
@@ -140,9 +144,11 @@ public class MyJsonUtil {
 		return items;
 	}
 	
-	public void writeInventoryItems(Inventory inventory) {
+	public void saveInventoryItems(Inventory inventory) {
 		
-		String filename = inventory.getUser() + "_inv_" + inventory.getName();
+		Log.d("JSON", "Saving inventory items for: " + inventory.getName());
+		
+		String filename = inventory.getUser() + "_inv_" + inventory.getId();
 		ArrayList<InventoryItem> items = inventory.getItems();
 		
 		// create new user entry
@@ -153,6 +159,7 @@ public class MyJsonUtil {
 			pushInventory = new JSONObject();
 			itemsList = new JSONArray();
 			
+			pushInventory.put("id", inventory.getId());
 			pushInventory.put("name", inventory.getName());
 			pushInventory.put("desc", inventory.getDesc());
 			for(int i = 0 ; i < items.size(); i ++)
@@ -172,5 +179,59 @@ public class MyJsonUtil {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public ArrayList<Inventory> getInventories(String userName) {
+		//TODO
+		Log.i("Inventory", "Loading list of inventories...");
+		ArrayList<Inventory> inventories = new ArrayList<Inventory>();
+		String filename = userName + "_inventories";
+		
+		//get current file contents
+		JSONObject fullData = readFromFile(filename);
+		
+		JSONArray invArr = null;
+		try {
+			invArr = fullData.getJSONArray(filename);
+			Log.i("Inventory", "Inventory Array grabbed. Size: " + invArr.length());
+			
+			for(int i = 0; i < invArr.length() ; i++){
+				JSONObject invObj = invArr.getJSONObject(i);
+				int id = invObj.getInt("id");
+				String name = invObj.getString("name");
+				Inventory inv = new Inventory(id, userName, name);
+				inventories.add(inv);
+			}
+			
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return inventories;
+	}
+
+	public void writeInventory(Inventory inventory) {
+		Log.i("Inventory","Saving inventory: " +inventory.getName());
+		
+		String filename = inventory.getUser() + "_inventories";
+		
+		JSONObject fullDataObj = readFromFile(filename);
+		JSONArray inventoriesArr = null;
+
+		try {
+			JSONObject inventoryJson = new JSONObject();
+			inventoryJson.put("id", inventory.getId());
+			inventoryJson.put("name", inventory.getName());
+			
+			inventoriesArr = fullDataObj.getJSONArray(inventory.getUser() + "_inventories");
+			inventoriesArr.put(inventoryJson);
+			
+			saveToFile(filename, fullDataObj);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		
+		
 	}
 }

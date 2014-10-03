@@ -7,34 +7,44 @@ import app.se329.project2.util.MyJsonUtil;
 
 public class Inventory {
 
+	private int id;
 	private String name;
 	private String descr;
-	private Context cntxt;
 	private ArrayList<InventoryItem> items;
-	
 	private String userName;
 	
 	
-	public Inventory(Context context, String username, String inventoryName){
-		cntxt = context;
+	public Inventory(int id, String username, String inventoryName){
+		this.id = id;
 		userName = username;
 		name = inventoryName;
 	}
 	
-	public boolean inflateInventory(String userName, String inventoryName){
+	public boolean inflateInventory(Context cntxt){
 		MyJsonUtil jsonUtil = new MyJsonUtil(cntxt);
-		items = jsonUtil.getInventoryItems(userName, inventoryName);
+		items = jsonUtil.getInventoryItems(this);
 		
 		return true;
 	}
 	
-	public boolean saveInventory(){
+	public boolean saveInventoryObject(Context cntxt){
 		MyJsonUtil jsonUtil = new MyJsonUtil(cntxt);
-		jsonUtil.writeInventoryItems(this);
-		
+		jsonUtil.writeInventory(this);
 		return true;
 	}
+	
+	public boolean saveInventoryItems(Context cntxt){
+		MyJsonUtil jsonUtil = new MyJsonUtil(cntxt);
+		jsonUtil.saveInventoryItems(this);
+		return true;
+	}
+	public int getId() {
+		return id;
+	}
 
+	public void setId(int id) {
+		this.id = id;
+	}
 	public String getName() {
 		return name;
 	}
@@ -52,6 +62,7 @@ public class Inventory {
 	}
 
 	public ArrayList<InventoryItem> getItems() {
+		if(items==null)items = new ArrayList<InventoryItem>();
 		return items;
 	}
 	public void setItems(ArrayList<InventoryItem> items) {

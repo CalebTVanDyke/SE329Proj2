@@ -60,24 +60,6 @@ public class HomeFragment extends ProjectFragment{
         return Color.TRANSPARENT;
     }
 	
-	@Override
-	protected boolean overrideOnKeyUp(int keyCode, KeyEvent event) 
-	{
-		if(keyCode == KeyEvent.KEYCODE_MENU)
-		{
-			if(MainActivity.drawerLayout.isDrawerOpen(Gravity.LEFT))
-			{
-				MainActivity.drawerLayout.closeDrawers();
-				return true;
-			}
-			
-		MainActivity.drawerLayout.openDrawer(Gravity.LEFT);
-		return true;
-		}
-		
-		return super.overrideOnKeyUp(keyCode, event);
-	}
-	
 	private void promptUser(String title, String message){
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(rootView.getContext());
 		alertDialogBuilder.setTitle(title);

@@ -1,5 +1,9 @@
 package app.se329.project2;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -65,9 +69,20 @@ public class LoginFragment extends ProjectFragment{
 			
 			protected void onPostExecute(String result) {
 				rootView.findViewById(R.id.reg_loading_home).setVisibility(View.INVISIBLE);
-				if(result.contains(passToVerify)){
-					boolean isNewUser = new MyJsonUtil(rootView.getContext()).verifyLocalUser(userToVerify, passToVerify);
-					launchUserHome(userToVerify, isNewUser);
+				boolean loginSuccess = false;
+				try {
+					JSONArray jArr = new JSONArray(result);
+					JSONObject jObj = jArr.getJSONObject(0);
+					result = jObj.getString("Password");
+					
+					if(result.equals(passToVerify)) loginSuccess = true;
+					
+				} catch (JSONException e) {  e.printStackTrace();  }
+				
+				if(loginSuccess)
+				{
+					boolean newToDevice = new MyJsonUtil(rootView.getContext()).verifyLocalUser(userToVerify, passToVerify);
+					launchUserHome(userToVerify, newToDevice);
 				}
 				else if(result.equals("ER"))promptUser("Network Error", "Please check network connection and try again.");
 				else promptUser("Login Failure", "Incorrect username or password.");
@@ -76,10 +91,10 @@ public class LoginFragment extends ProjectFragment{
 		
 	}
 
-    private void launchUserHome(String userToVerify, boolean isNewUser) {
+    private void launchUserHome(String userToVerify, boolean newToDevice) {
     	
     	MainActivity activity = (MainActivity) getSupportActivity();
-    	activity.setSessionUser(userToVerify, isNewUser);
+    	activity.setSessionUser(userToVerify, newToDevice);
     	HomeFragment homeFragment = new HomeFragment();
     	Bundle arguments = new Bundle();
     	activity.setContent(homeFragment, arguments, "Home");

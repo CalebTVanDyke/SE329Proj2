@@ -1,6 +1,7 @@
 package app.se329.project2;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -25,7 +26,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import app.se329.project2.model.Inventory;
+import app.se329.project2.model.InventoryItem;
 import app.se329.project2.model.Navigation;
+import app.se329.project2.util.MyJsonUtil;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -34,9 +38,11 @@ public class MainActivity extends ActionBarActivity {
 	private ActionBarDrawerToggle drawerToggle;
 	private ListView navigationDrawerView;
 	
+	// User Environment Variables
 	private String sessionUser = null;
-	private String currentInventory = "default";
-	private boolean isNewUser;
+	private int currentInventory = 0;
+	private boolean newToDevice;
+	private ArrayList<Inventory> inventories;
 
 	// First Level Frag used to track what level the fragment transaction is
 	// happening on.
@@ -101,8 +107,13 @@ public class MainActivity extends ActionBarActivity {
 	public void onBackPressed() {
 		getSupportActionBar().setSubtitle(null);
 
-		if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-			if (getSupportActionBar().getTitle().toString().equals("Home")){
+		int bsCount = getSupportFragmentManager().getBackStackEntryCount();
+		String pageTitle = getSupportActionBar().getTitle().toString();
+		Log.i("Inventory Pal", "onBackPressed() on page: "+pageTitle+". Back-stack count: "+bsCount+".");
+		
+		if (bsCount == 0) {
+			
+			if (pageTitle.equals("Home") || pageTitle.equals("Login")){
 				Log.e("Inventory Pal", "Closing the app.");
 				moveTaskToBack(true);
 			}
@@ -319,20 +330,45 @@ public class MainActivity extends ActionBarActivity {
 
 	public void setSessionUser(String user, boolean isnewuser) {
 		sessionUser = user;
-		isNewUser = isnewuser;
+		newToDevice = isnewuser;
+		
+		loadInventories();
 	}
+	private void loadInventories() {
+		
+		MyJsonUtil jsonUtil = new MyJsonUtil(this);
+		inventories = jsonUtil.getInventories(sessionUser);
+		
+		if(inventories.size() == 0){
+			Log.e("Inventory", "No Inventories were found. Creating default");
+			Inventory inv = new Inventory(0, sessionUser, sessionUser+"'s Default Inventory");
+			inv.saveInventoryObject(this);
+			inv.saveInventoryItems(this);
+			inventories.add(inv);
+			
+		}
+		
+		inventories.get(0).inflateInventory(this);
+		
+		//debug. Print all inventories loaded.
+		for(int i=0; i < inventories.size(); i++){
+			Log.i("Inventory", inventories.get(i).getName() + " Loaded.\n-----------items------------");
+		}
+		
+	}
+
 	public String getSessionUser() {
 		return sessionUser;
 	}
 	
-	public void setInventory(String inven) {
+	public void setInventory(int inven) {
 		currentInventory = inven;
 	}
-	public String getCurrentInventory() {
-		return currentInventory;
+	public Inventory getCurrentInventory() {
+		return inventories.get(currentInventory);
 	}
 	
 	public boolean isNewUser() {
-		return isNewUser;
+		return newToDevice;
 	}
 }

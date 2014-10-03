@@ -55,9 +55,9 @@ class RegisterPopup extends Popup {
 	private void attemptRegister(){
 		
 		// Get text field values. Store in final strings.
-		EditText username = (EditText) popupActivity.findViewById(R.id.item_name_field);
-		EditText pass = (EditText) popupActivity.findViewById(R.id.item_quantity_field);
-		EditText passConf = (EditText) popupActivity.findViewById(R.id.item_descr_field);
+		EditText username = (EditText) popupActivity.findViewById(R.id.reg_name_field);
+		EditText pass = (EditText) popupActivity.findViewById(R.id.reg_pass_field);
+		EditText passConf = (EditText) popupActivity.findViewById(R.id.reg_pass2_field);
 		final String userToEnter = username.getText().toString();
 		final String passToEnter = pass.getText().toString();
 		final String passToConf = passConf.getText().toString();
@@ -115,17 +115,17 @@ class RegisterPopup extends Popup {
 		
 		if(user.length() < 5)
 		{
-			promptUser("Form Error", "Username must be at least 5 characters.", true);
+			promptUser("Form Error", "Username must be at least 5 characters.", false);
 			return true;
 		}
 		if(pass.length() < 6)
 		{
-			promptUser("Form Error", "Passwords must be at least 6 characters.", true);
+			promptUser("Form Error", "Passwords must be at least 6 characters.", false);
 			return true;
 		}
 		if(!pass.equals(passConf))
 		{
-			promptUser("Form Error", "Passwords do not match.", true);
+			promptUser("Form Error", "Passwords do not match.", false);
 			return true;
 		}
 		return false;

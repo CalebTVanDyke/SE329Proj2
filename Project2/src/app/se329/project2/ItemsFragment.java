@@ -37,6 +37,10 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_items, null,false);
 		
+		inventory = getSupportActivity().getCurrentInventory();
+		
+		Log.i("Inventory", "Items View for: "+inventory.getName()+": "+inventory.getDesc());
+		
 		getInventoryItems();
 		
 		setUpItemsList();
@@ -56,7 +60,7 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 			getFragmentManager().popBackStack();
 			return true;
 		} else if (itemId == R.id.add_item_butt) {
-			launchItemPopup(true, null, inventory.getItems().size()+1);// true: new, null: not passing in an item.
+			launchItemPopup(true, null, inventory.getItems().size()+1);
 			return true;
 		}
 	    return super.onOptionsItemSelected(item);
@@ -110,11 +114,9 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 
 	private ArrayList<InventoryItem> getInventoryItems() {
 		
-		inventory = new Inventory(rootView.getContext(), getSupportActivity().getSessionUser(), getSupportActivity().getCurrentInventory());
-		inventory.inflateInventory(inventory.getUser(), inventory.getName());
-		
 		if(inventory.getItems().size()==0)
 			promptUser("Inventory", "It looks like you have no items! Click the add button at the top to create one!");
+		
 		return inventory.getItems();
 	}
 	
@@ -151,16 +153,11 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 
 	private void addItem(InventoryItem item, int insertionIndex) {
 		inventory.getItems().add(insertionIndex, item);
-		inventory.saveInventory();
+		inventory.saveInventoryItems(rootView.getContext());
 	}
 	private void removeItem(int toDelete) {
 		inventory.getItems().remove(toDelete);
-		inventory.saveInventory();
-	}
-
-	@Override
-	public void onClick(View v) {
-		ListItemView view = (ListItemView) v;
+		inventory.saveInventoryItems(rootView.getContext());
 	}
 	
 	private void promptUser(String title, String message){
@@ -172,4 +169,7 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 			.setPositiveButton("Okay", null);
 		alertDialogBuilder.create().show();
 	}
+
+	@Override
+	public void onClick(View arg0) {}
 }

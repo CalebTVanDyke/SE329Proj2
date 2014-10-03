@@ -95,7 +95,7 @@
                         android:textColor="#AA000000" />
 
                     <EditText
-                        android:id="@+id/item_name_field"
+                        android:id="@+id/reg_name_field"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -113,7 +113,7 @@
                         android:id="@+id/frameLayout3"
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
-                        android:layout_below="@+id/item_name_field"
+                        android:layout_below="@+id/reg_name_field"
                         android:background="@color/faint_grey" >
                     </FrameLayout>
                 </RelativeLayout>
@@ -176,7 +176,7 @@
                         android:textColor="#AA000000" />
 
                     <EditText
-                        android:id="@+id/item_weight_field"
+                        android:id="@+id/reg_pass_field"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
@@ -191,8 +191,8 @@
                         android:id="@+id/item_weight_unit_field"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/item_weight_field"
-                        android:layout_toRightOf="@+id/item_weight_field"
+                        android:layout_alignBottom="@+id/reg_pass_field"
+                        android:layout_toRightOf="@+id/reg_pass_field"
                         android:gravity="center"
                         android:padding="14dp"
                         android:hint="Units"
@@ -203,7 +203,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
                         android:layout_alignParentLeft="true"
-                        android:layout_below="@+id/item_weight_field"
+                        android:layout_below="@+id/reg_pass_field"
                         android:background="@color/faint_grey" >
                     </FrameLayout>
                 </RelativeLayout>
@@ -217,7 +217,7 @@
                     android:layout_below="@+id/item_weight_layout" >
 
                     <EditText
-                        android:id="@+id/item_descr_field"
+                        android:id="@+id/reg_pass2_field"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -233,8 +233,8 @@
                         android:id="@+id/item_descr_text"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:layout_alignBaseline="@+id/item_descr_field"
-                        android:layout_alignBottom="@+id/item_descr_field"
+                        android:layout_alignBaseline="@+id/reg_pass2_field"
+                        android:layout_alignBottom="@+id/reg_pass2_field"
                         android:layout_alignParentLeft="true"
                         android:gravity="center"
                         android:padding="4dp"
@@ -246,7 +246,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
                         android:layout_alignParentLeft="true"
-                        android:layout_below="@+id/item_descr_field"
+                        android:layout_below="@+id/reg_pass2_field"
                         android:background="@color/faint_grey" >
                     </FrameLayout>
                 </RelativeLayout>

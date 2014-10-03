@@ -90,12 +90,12 @@ class ItemPopup extends Popup {
 		TextView title = (TextView) popupContent.findViewById(R.id.title_textview);
 		title.setText("Item " + (position+1)+":");
 		
-		EditText itemName = (EditText) popupContent.findViewById(R.id.item_name_field);
+		EditText itemName = (EditText) popupContent.findViewById(R.id.reg_name_field);
 		itemName.setEnabled(enabled);
 		itemName.requestFocus();
 		itemName.setText(item.getName());
 		
-		EditText itemDesc = (EditText) popupContent.findViewById(R.id.item_descr_field);
+		EditText itemDesc = (EditText) popupContent.findViewById(R.id.reg_pass2_field);
 		itemDesc.setEnabled(enabled);
 		itemDesc.setText(item.getDesc());
 		
@@ -103,7 +103,7 @@ class ItemPopup extends Popup {
 		itemQuantity.setEnabled(enabled);
 		itemQuantity.setText(""+item.getQuantity());
 		
-		EditText itemWeight = (EditText) popupContent.findViewById(R.id.item_weight_field);
+		EditText itemWeight = (EditText) popupContent.findViewById(R.id.reg_pass_field);
 		itemWeight.setEnabled(enabled);
 		itemWeight.setText(""+item.getUnitWeight());
 		
@@ -118,10 +118,10 @@ class ItemPopup extends Popup {
 		popupContent.findViewById(R.id.okay_butt).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				EditText name = (EditText) popupActivity.findViewById(R.id.item_name_field);
-				EditText desc = (EditText) popupActivity.findViewById(R.id.item_descr_field);
+				EditText name = (EditText) popupActivity.findViewById(R.id.reg_name_field);
+				EditText desc = (EditText) popupActivity.findViewById(R.id.reg_pass2_field);
 				EditText quan = (EditText) popupActivity.findViewById(R.id.item_quantity_field);
-				EditText weigh = (EditText) popupActivity.findViewById(R.id.item_weight_field);
+				EditText weigh = (EditText) popupActivity.findViewById(R.id.reg_pass_field);
 				EditText weightU = (EditText) popupActivity.findViewById(R.id.item_weight_unit_field);
 				
 				int quantity = 0;
