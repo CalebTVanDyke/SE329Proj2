@@ -11,9 +11,16 @@
     
     <item
         android:id="@+id/upload_butt"
-        android:icon="@drawable/ic_"
+        android:icon="@drawable/ic_up_arrow"
         android:title="Sync Inventory"
         android:titleCondensed="Sync"
+        app:showAsAction="always"/>
+    
+    <item
+        android:id="@+id/dload_butt"
+        android:icon="@drawable/ic_down_arrow"
+        android:title="Download Inventory"
+        android:titleCondensed="Load Inventory"
         app:showAsAction="always"/>
 
 </menu>

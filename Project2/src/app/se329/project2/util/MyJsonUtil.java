@@ -118,7 +118,7 @@ public class MyJsonUtil {
 		return true;
 	}
 
-	public ArrayList<InventoryItem> getInventoryItems(Inventory inventory) {
+	public ArrayList<InventoryItem> getInventoryItems(Inventory inventory, String data) {
 		
 		Log.d("JSON", "Loading inventory items for: " + inventory.getName());
 		
@@ -126,13 +126,18 @@ public class MyJsonUtil {
 		
 		String filename = inventory.getUser() + "_inv_" + inventory.getId();
 		
-		//get current file contents
-		JSONObject inventJson = readFromFile(filename);
-		
+		JSONObject inventJson;
 		JSONArray itemsJsonArr = null;
 		JSONObject itemJson = null;
 		InventoryItem item = null;
 		try {
+			
+			if(data == null)inventJson = readFromFile(filename);
+			else {
+				Log.i("JSON", "Inflating from result file.");
+				inventJson = new JSONObject(data);
+			}
+			
 			itemsJsonArr = inventJson.getJSONArray("items");
 			for(int i = 0; i < itemsJsonArr.length(); i++){
 				item = new InventoryItem();
@@ -274,7 +279,7 @@ public class MyJsonUtil {
 		
 		Log.i("Upload", "Uploading "+filename+" to server...");
 		new AsyncTask<String, Object, String>() {
-			DatabaseAccess dbAccess = new DatabaseAccess(cntxt);
+			DatabaseAccess dbAccess = new DatabaseAccess();
 			
 			protected void onPreExecute() {
 
@@ -291,4 +296,29 @@ public class MyJsonUtil {
 			}
 		}.execute();
 	}
+	
+	public void downloadInventory(Inventory inventory) {
+		
+		final String filename = inventory.getUser() + "_inv_" + inventory.getId();
+		
+		Log.i("Download", "Downloading "+filename+" from server...");
+		new AsyncTask<String, Object, String>() {
+			DatabaseAccess dbAccess = new DatabaseAccess();
+			
+			protected void onPreExecute() {
+
+			};
+			
+			@Override
+			protected String doInBackground(String... params) {
+				return dbAccess.readFromServer(filename);
+			}
+			
+			protected void onPostExecute(String result) {
+				Log.i("Result", "Response from server: " + result);
+				
+			}
+		}.execute();
+	}
+	
 }

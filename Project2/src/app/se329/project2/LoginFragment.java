@@ -52,7 +52,7 @@ public class LoginFragment extends ProjectFragment{
 		final String passToVerify = pass.getText().toString();
 
 		new AsyncTask<String, Object, String>() {
-			DatabaseAccess dbAccess = new DatabaseAccess(rootView.getContext());
+			DatabaseAccess dbAccess = new DatabaseAccess();
 			
 			protected void onPreExecute() {
 				rootView.findViewById(R.id.reg_loading_home).setVisibility(View.VISIBLE);

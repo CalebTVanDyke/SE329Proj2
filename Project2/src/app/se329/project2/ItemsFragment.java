@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import app.se329.project2.model.Inventory;
 import app.se329.project2.model.InventoryItem;
+import app.se329.project2.tools.DatabaseAccess;
 import app.se329.project2.util.MyJsonUtil;
 import app.se329.project2.views.ListItemView;
 
@@ -65,8 +67,36 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 		} else if (itemId == R.id.upload_butt) {
 			MyJsonUtil.uploadInventory(inventory);
 			return true;
+		}else if (itemId == R.id.dload_butt) {
+			downloadFromServer();
+			return true;
 		}
 	    return super.onOptionsItemSelected(item);
+	}
+
+	private void downloadFromServer() {
+		final String filename = inventory.getUser() + "_inv_" + inventory.getId();
+		
+		Log.i("Download", "Downloading "+filename+" from server...");
+		new AsyncTask<String, Object, String>() {
+			DatabaseAccess dbAccess = new DatabaseAccess();
+			
+			protected void onPreExecute() {
+
+			};
+			
+			@Override
+			protected String doInBackground(String... params) {
+				return dbAccess.readFromServer(filename);
+			}
+			
+			protected void onPostExecute(String result) {
+				Log.i("Result", "Response from server: " + result);
+				inventory.inflateInventory(rootView.getContext(), result);
+				listViewAdapter.notifyDataSetChanged();
+			}
+		}.execute();
+		
 	}
 
 	private void setUpItemsList() {

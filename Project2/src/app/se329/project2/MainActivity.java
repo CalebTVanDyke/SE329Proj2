@@ -355,7 +355,7 @@ public class MainActivity extends ActionBarActivity {
 			
 		}
 		
-		inventories.get(0).inflateInventory(this);
+		inventories.get(0).inflateInventory(this, null);
 		
 	}
 

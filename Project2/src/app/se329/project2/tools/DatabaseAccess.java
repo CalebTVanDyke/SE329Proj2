@@ -29,7 +29,7 @@ import android.util.Log;
  */
 public class DatabaseAccess {
 	
-	public DatabaseAccess(Context context){} 
+	public DatabaseAccess(){} 
 	
 	public String query(String command){
 		Log.i("Query", "Command: " + command);
@@ -93,6 +93,47 @@ public class DatabaseAccess {
 			Log.e("Query", "Error in http connection: "+e.toString());
 			return;
 		}
+		
+	}
+	
+	public String readFromServer(String filename) {
+
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("filename",filename));
+		InputStream is = null;
+		// http post
+		try {
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpPost httppost = new HttpPost("http://arlenburroughs.com/se_329_inventorypal/inventories/read_inventory.php");
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			HttpContext localContext = new BasicHttpContext();
+			HttpResponse response = httpclient.execute(httppost, localContext);
+			HttpEntity entity = response.getEntity();
+			is = entity.getContent();
+
+			Log.i("Query", ".getEntity() successful");
+		} catch (Exception e) {
+			Log.e("Query", "Error in http connection: " + e.toString());
+			return "ER";
+		}
+		String result;
+		// convert response to string
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			is.close();
+			result = sb.toString();
+			Log.d("Query", "FROM PHP ---> " + result);
+
+		} catch (Exception e) {
+			Log.e("Query", "Error converting result " + e.toString());
+			return "ER";
+		}
+		return result;
 		
 	}
 }

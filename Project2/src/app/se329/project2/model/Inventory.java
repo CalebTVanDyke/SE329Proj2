@@ -20,9 +20,9 @@ public class Inventory {
 		name = inventoryName;
 	}
 	
-	public boolean inflateInventory(Context cntxt){
+	public boolean inflateInventory(Context cntxt, String result){
 		MyJsonUtil jsonUtil = new MyJsonUtil(cntxt);
-		items = jsonUtil.getInventoryItems(this);
+		items = jsonUtil.getInventoryItems(this, result);
 		
 		return true;
 	}

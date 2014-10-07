@@ -68,7 +68,7 @@ class RegisterPopup extends Popup {
 		// task for validating user's desired username. Insertion if valid.
 		new AsyncTask<String, Object, String>() 
 		{
-			DatabaseAccess dbAccess = new DatabaseAccess(popupActivity);
+			DatabaseAccess dbAccess = new DatabaseAccess();
 	
 			protected void onPreExecute() {
 				popupActivity.findViewById(R.id.reg_loading).setVisibility(View.VISIBLE);
