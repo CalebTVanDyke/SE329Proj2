@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -77,31 +78,10 @@ public class ListItemView extends LinearLayout{
 		return textView.getText().toString();
 	}
 	
-	public void setItemIcon(int resource){
-		iconImageView.setImageDrawable(getContext().getResources().getDrawable(resource));
+	public void setItemIcon(Bitmap bitmap){
+		if(bitmap == null)return;
+		iconImageView.setImageBitmap(bitmap);
 		iconImageView.setVisibility(VISIBLE);
-	}
-	
-	public void setItemIcon(String imageUrl){
-		
-		Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
-		iconImageView.setImageBitmap(icon);
-		iconImageView.setVisibility(VISIBLE);
-		
-//		new AsyncTask<String, Object, Bitmap>() {
-//
-//			@Override
-//			protected Bitmap doInBackground(String... urls) {
-//				int size = iconImageView.getHeight();
-//				return InternetUtil.getInstanceOfInternetUtil().getBitmapForUrl(urls[0], size, size);
-//			}
-//			
-//			protected void onPostExecute(Bitmap icon) {
-//				iconImageView.setImageBitmap(icon);
-//				iconImageView.setVisibility(VISIBLE);
-//			};
-//			
-//		}.execute(imageUrl);
 	}
 	
 	public void setItemTextRight(String text)

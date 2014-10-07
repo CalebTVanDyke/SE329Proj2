@@ -1,6 +1,12 @@
 package app.se329.project2;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
@@ -12,7 +18,10 @@ import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import app.se329.project2.model.InventoryItem;
 import app.se329.project2.tools.AnimationEndListener;
+import app.se329.project2.util.MyJsonUtil;
 /**
  * Popup activity is an activity class that allows the easy creation of views as popups.
  * @author wdian
@@ -24,6 +33,7 @@ public class PopupActivity extends ActionBarActivity implements OnClickListener{
 	FrameLayout popupRoot;
 	View popupContent;
 	static boolean closable = true;
+	String bmpName = "default";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +113,29 @@ public class PopupActivity extends ActionBarActivity implements OnClickListener{
 			}
 		});
 		popupRoot.startAnimation(fadeOut);
+	}
+	
+	
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		Log.i("Result", "@@@ Returned with resultCode: " + resultCode + ", requestCode: " + requestCode);
+		if(requestCode == 44 && resultCode == -1){
+			Uri selectedImage = data.getData();
+            InputStream imageStream = null;
+			try {
+				imageStream = getContentResolver().openInputStream(selectedImage);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+            Bitmap toSave = BitmapFactory.decodeStream(imageStream);
+            ImageView iv = (ImageView) findViewById(R.id.reg_photo);
+            iv.setImageBitmap(toSave);
+            MyJsonUtil jUtil = new MyJsonUtil(getApplicationContext());
+            bmpName = jUtil.saveBitmap(toSave);
+            Log.i("Image","Bitmap saved as: " + bmpName+"!");
+            
+		}
+		
 	}
 
 }

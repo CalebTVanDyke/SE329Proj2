@@ -39,7 +39,7 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 		
 		inventory = getSupportActivity().getCurrentInventory();
 		
-		Log.i("Inventory", "Items View for: "+inventory.getName()+": "+inventory.getDesc());
+		Log.i("Inventory", "Items View for: "+inventory.getName());
 		
 		getInventoryItems();
 		
@@ -62,11 +62,13 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 		} else if (itemId == R.id.add_item_butt) {
 			launchItemPopup(true, null, inventory.getItems().size()+1);
 			return true;
+		} else if (itemId == R.id.upload_butt) {
+			MyJsonUtil.uploadInventory(inventory);
+			return true;
 		}
 	    return super.onOptionsItemSelected(item);
 	}
-	
-	
+
 	private void setUpItemsList() {
 		
 		itemsListView = (ListView) rootView.findViewById(R.id.items_list_view);
@@ -78,9 +80,10 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 				InventoryItem item = inventory.getItems().get(position);
 				ListItemView listItem = new ListItemView(getActivity());
 				listItem.setItemName(item.getName());
-				listItem.setItemIcon(R.drawable.box_bud);
+				listItem.setItemIcon(item.getBitmap());
 				listItem.setItemSubName(item.getDesc());
 				listItem.setItemTextRight(""+item.getQuantity());
+				
 				final int pos = position;
 				listItem.setOnClickListener(new OnClickListener() {
 					

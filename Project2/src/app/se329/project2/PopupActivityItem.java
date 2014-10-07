@@ -1,8 +1,16 @@
 package app.se329.project2;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import app.se329.project2.model.InventoryItem;
 
@@ -87,6 +96,9 @@ class ItemPopup extends Popup {
 	}
 	
 	private void inflateTextFields(View popupContent, boolean enabled) {
+		
+		popupActivity.bmpName = item.getPicName();
+		
 		TextView title = (TextView) popupContent.findViewById(R.id.title_textview);
 		title.setText("Item " + (position+1)+":");
 		
@@ -111,6 +123,10 @@ class ItemPopup extends Popup {
 		itemWeightUnits.setEnabled(enabled);
 		itemWeightUnits.setText(""+item.getWeightUnits());
 		
+		ImageView iv = (ImageView) popupContent.findViewById(R.id.reg_photo);
+        if(item.getBitmap()!=null)iv.setImageBitmap(item.getBitmap());
+        iv.setEnabled(enabled);
+		
 	}
 	
 	public void configureButtonPresses(View popupContent) {
@@ -131,8 +147,8 @@ class ItemPopup extends Popup {
 					weight = Double.parseDouble(weigh.getText().toString());
 				}catch (NumberFormatException e){}
 				
-				
-				item = new InventoryItem(name.getText().toString(), desc.getText().toString(), quantity, weight, weightU.getText().toString());
+				item = new InventoryItem(name.getText().toString(), desc.getText().toString(), quantity, 
+						weight, weightU.getText().toString(), popupActivity.bmpName, popupActivity.getFilesDir().toString());
 				
 				Intent data = new Intent();
 				data.putExtra("item", item);
@@ -148,6 +164,15 @@ class ItemPopup extends Popup {
 			}
 		});
 		
+		popupContent.findViewById(R.id.reg_photo).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+				photoPickerIntent.setType("image/*");
+				popupActivity.startActivityForResult(photoPickerIntent, 44);  
+			}
+		});
+		
 		popupContent.findViewById(R.id.cancel_butt).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -155,6 +180,7 @@ class ItemPopup extends Popup {
 			}
 		});
 	}
+	
 	
 	@Override
 	public void popupIsShown(PopupActivity popupActivity) {

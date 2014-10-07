@@ -71,4 +71,28 @@ public class DatabaseAccess {
 		}
 		return result;
 	}
+
+	public void writeToServer(String data, String filename) {
+
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("filename",filename+".json"));
+		nameValuePairs.add(new BasicNameValuePair("data",data));
+		InputStream is = null;
+		//http post
+		try{
+		        HttpClient httpclient = new DefaultHttpClient();
+		        HttpPost httppost = new HttpPost("http://arlenburroughs.com/se_329_inventorypal/inventories/write_inventory.php");
+		        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		        HttpContext localContext = new BasicHttpContext();
+		        HttpResponse response = httpclient.execute(httppost,localContext);
+		        HttpEntity entity = response.getEntity();
+		        is = entity.getContent();
+		        
+		        Log.i("Query", ".getEntity() successful");
+		}catch(Exception e){
+			Log.e("Query", "Error in http connection: "+e.toString());
+			return;
+		}
+		
+	}
 }

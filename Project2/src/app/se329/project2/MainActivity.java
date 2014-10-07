@@ -1,10 +1,16 @@
 package app.se329.project2;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -321,6 +327,7 @@ public class MainActivity extends ActionBarActivity {
 	private void setupViews() {
 		navigationDrawerView = (ListView) findViewById(R.id.navigation_drawer);
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		
 	}
 	
 	@Override
@@ -349,11 +356,6 @@ public class MainActivity extends ActionBarActivity {
 		}
 		
 		inventories.get(0).inflateInventory(this);
-		
-		//debug. Print all inventories loaded.
-		for(int i=0; i < inventories.size(); i++){
-			Log.i("Inventory", inventories.get(i).getName() + " Loaded.\n-----------items------------");
-		}
 		
 	}
 

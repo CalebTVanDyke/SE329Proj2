@@ -5,26 +5,35 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.os.Environment;
 import android.util.Log;
+import android.view.View;
+import app.se329.project2.R;
 import app.se329.project2.model.Inventory;
 import app.se329.project2.model.InventoryItem;
+import app.se329.project2.tools.DatabaseAccess;
 
 public class MyJsonUtil {
 
-	Context cntxt;
+	static Context cntxt;
 	
 	public MyJsonUtil(Context context){
 		cntxt = context;
 	}
 	
-	public JSONObject readFromFile(String filename){
+	public static JSONObject readFromFile(String filename){
 		String jsonText = null;
 		JSONObject jObj = null;
 		try{
@@ -51,7 +60,7 @@ public class MyJsonUtil {
 		return jObj;
 	}
 	
-	public boolean saveToFile(String filename, JSONObject fullDataObj){
+	public static boolean saveToFile(String filename, JSONObject fullDataObj){
 		try
 		{
 			FileOutputStream fos = cntxt.openFileOutput(filename, Context.MODE_PRIVATE);
@@ -133,6 +142,8 @@ public class MyJsonUtil {
 				item.setDescr((itemJson.getString("item_desc")));
 				item.setQuantity(Integer.parseInt(itemJson.getString("item_quan")));
 				item.setUnitWeight(Double.parseDouble(itemJson.getString("item_weight")));
+				item.setPicName(itemJson.getString("pic_name"));
+				item.setPicPath(""+cntxt.getFilesDir());
 				
 				Log.i("Item", "Added item: " + item.getName());
 				items.add(item);
@@ -170,6 +181,7 @@ public class MyJsonUtil {
 				putItem.put("item_quan", items.get(i).getQuantity());
 				putItem.put("item_weight", items.get(i).getUnitWeight());
 				putItem.put("item_weigh_unit", items.get(i).getWeightUnits());
+				putItem.put("pic_name", items.get(i).getPicName());
 				
 				itemsList.put(i, putItem);
 			}
@@ -233,5 +245,50 @@ public class MyJsonUtil {
 
 		
 		
+	}
+
+	public static String saveBitmap(Bitmap image) {
+
+		String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
+	    String mImageName="IP_"+ timeStamp +".jpg";
+		
+	    try {
+	        FileOutputStream fos = cntxt.openFileOutput(mImageName, Context.MODE_PRIVATE);
+	        image.compress(Bitmap.CompressFormat.PNG, 90, fos);
+	        fos.close();
+	    } catch (FileNotFoundException e) {
+	        Log.d("image", "File not found: " + e.getMessage());
+	    } catch (IOException e) {
+	        Log.d("image", "Error accessing file: " + e.getMessage());
+	    }
+	    
+	    return mImageName;
+	}
+
+	public static void uploadInventory(Inventory inventory) {
+		
+		final String filename = inventory.getUser() + "_inv_" + inventory.getId();
+		
+		//get current file contents
+		final JSONObject inventoryJson = readFromFile(filename);
+		
+		Log.i("Upload", "Uploading "+filename+" to server...");
+		new AsyncTask<String, Object, String>() {
+			DatabaseAccess dbAccess = new DatabaseAccess(cntxt);
+			
+			protected void onPreExecute() {
+
+			};
+			
+			@Override
+			protected String doInBackground(String... params) {
+				dbAccess.writeToServer(""+inventoryJson, filename);
+				return "";
+			}
+			
+			protected void onPostExecute(String result) {
+				
+			}
+		}.execute();
 	}
 }

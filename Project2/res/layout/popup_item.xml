@@ -252,11 +252,50 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/bottom_options_layout"
+                    android:id="@+id/item_pic_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/item_descr_layout" >
+
+                    <FrameLayout
+                        android:id="@+id/FrameLayout02"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/faint_grey" >
+                    </FrameLayout>
+
+                    <ImageButton
+                        android:id="@+id/reg_photo"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/box_bud_big" />
+
+                    <TextView
+                        android:id="@+id/item_photo_text"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/reg_photo"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:text="Photo:"
+                        android:textColor="#AA000000" />
+
+                </RelativeLayout>
+                
+                
+                <RelativeLayout
+                    android:id="@+id/bottom_options_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/item_pic_layout" >
 
                     <FrameLayout
                         android:id="@+id/FrameLayout08"
