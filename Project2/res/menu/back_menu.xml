@@ -5,7 +5,7 @@
         android:id="@+id/go_back"
         android:icon="@drawable/ic_menu_back"
         android:orderInCategory="99"
-        android:title="Go Back"
+        android:title="@string/goBack"
         android:titleCondensed="Go Back"
         app.se329.project2:showAsAction="never|collapseActionView"/>
 
@@ -14,6 +14,12 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/action_settings"/>
+    
+    <item 
+        android:id="@+id/action_export"
+        android:orderInCategory="101"
+        android:title="@string/export"
+        android:titleCondensed="Export CSV"/>
     
     
 </menu>

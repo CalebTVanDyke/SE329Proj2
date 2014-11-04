@@ -31,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 import app.se329.project2.model.Inventory;
 import app.se329.project2.model.InventoryItem;
@@ -257,10 +258,16 @@ public class MainActivity extends ActionBarActivity {
 		navigationDrawerView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-				TextView itemView = (TextView) view;
-				setItemViewSelected(itemView, adapterView);
-				// Switch content to proper view
-				selectMenuItem(position);
+				if(sessionUser != null){
+					TextView itemView = (TextView) view;
+					setItemViewSelected(itemView, adapterView);
+					// Switch content to proper view
+					selectMenuItem(position);
+				}
+				else{
+					Toast toast = Toast.makeText(getApplicationContext(), "Please Login", Toast.LENGTH_SHORT);
+					toast.show();
+				}
 			}
 		});
 

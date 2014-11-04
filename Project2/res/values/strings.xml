@@ -20,6 +20,8 @@
 	<string name="locations">Locations</string>
 	<string name="information">Information</string>
     <string name="logout">Logout</string>
+    <string name="export">Export CSV</string>
+    <string name="goBack">Go Back</string>
     
 
 </resources>

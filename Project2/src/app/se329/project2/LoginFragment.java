@@ -109,6 +109,7 @@ public class LoginFragment extends ProjectFragment{
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		menu.findItem(R.id.go_back).setVisible(false);
+		menu.findItem(R.id.action_export).setVisible(false);
 	}
 
     @Override
