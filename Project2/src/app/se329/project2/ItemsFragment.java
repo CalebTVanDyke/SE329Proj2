@@ -1,17 +1,25 @@
 package app.se329.project2;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.ListIterator;
+
+import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -104,10 +112,48 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 		}else if (itemId == R.id.dload_butt) {
 			downloadFromServer();
 			return true;
+		}else if (itemId == R.id.action_export) {
+			exportCSV();
+			return true;
 		}
 	    return super.onOptionsItemSelected(item);
 	}
 
+	private void exportCSV() {
+		final String filename = inventory.getUser() + "_inv_" + inventory.getId();
+				
+		File file   = null;
+		File root   = Environment.getExternalStorageDirectory();
+		if (root.canWrite()){
+		    File dir    =   new File (root.getAbsolutePath() + "/Inventory");
+		     dir.mkdirs();
+		     file   =   new File(dir, "Data.csv");
+		     FileOutputStream out   =   null;
+		    try {
+		        out = new FileOutputStream(file);
+		        } catch (FileNotFoundException e) {
+		            e.printStackTrace();
+		        }
+		        try {
+		            out.write(filename.getBytes());
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        }
+		        try {
+		            out.close();
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        }
+		    }
+		Uri u1 = null;
+		u1 = Uri.fromFile(file);
+
+		Intent sendIntent = new Intent(Intent.ACTION_SEND);
+		sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Inventory");
+		sendIntent.putExtra(Intent.EXTRA_STREAM, u1);
+		sendIntent.setType("text/html");
+		startActivity(sendIntent);
+	}
 	private void downloadFromServer() {
 		final String filename = inventory.getUser() + "_inv_" + inventory.getId();
 		
