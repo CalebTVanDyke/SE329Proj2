@@ -1,6 +1,8 @@
 package app.se329.project2;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.ListIterator;
 
 import android.app.AlertDialog;
@@ -135,6 +137,7 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 		
 		itemsListView = (ListView) rootView.findViewById(R.id.items_list_view);
 		listViewAdapter = new InventoryItemAdapter(rootView.getContext(), R.layout.view_list_item, inventory.getItems());
+		listViewAdapter.sort(new ItemComparator());
 		itemsListView.setAdapter(listViewAdapter);
 		
 	}
@@ -182,13 +185,12 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 		inventory.getItems().add(insertionIndex, item);
 		inventory.saveInventoryItems(rootView.getContext());
 		listViewAdapter.addToOriginal(item);
-		//		listViewAdapter.add(item);
+		listViewAdapter.sort(new ItemComparator());
 	}
 	private void removeItem(int toDelete) {
 		inventory.getItems().remove(toDelete);
 		inventory.saveInventoryItems(rootView.getContext());
 		listViewAdapter.removeFromOriginal(toDelete);
-//		listViewAdapter.remove(listViewAdapter.getItem(toDelete));
 	}
 	
 	private void promptUser(String title, String message){
@@ -309,6 +311,18 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 		
 		public void removeFromOriginal(int toDelete){
 			originalItems.remove(toDelete);
+		}
+		@Override
+		public void sort(Comparator<? super InventoryItem> comparator) {
+			super.sort(comparator);
+			Collections.sort(originalItems, comparator);
+		}
+	}
+	private class ItemComparator implements Comparator<InventoryItem>{
+
+		@Override
+		public int compare(InventoryItem lhs, InventoryItem rhs) {
+			return lhs.getName().compareTo(rhs.getName());
 		}
 	}
 }
