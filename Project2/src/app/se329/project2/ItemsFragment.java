@@ -1,12 +1,17 @@
 package app.se329.project2;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,8 +20,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import app.se329.project2.model.Inventory;
 import app.se329.project2.model.InventoryItem;
 import app.se329.project2.tools.DatabaseAccess;
@@ -33,11 +43,33 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 	View rootView;
 	Inventory inventory;
 	private ListView itemsListView;
-	private BaseAdapter listViewAdapter;
+	private InventoryItemAdapter listViewAdapter;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_items, null,false);
+		
+		EditText input = (EditText) rootView.findViewById(R.id.inputSearch);
+		input.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				listViewAdapter.getFilter().filter(s);
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		
 		inventory = getSupportActivity().getCurrentInventory();
 		
@@ -102,45 +134,7 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 	private void setUpItemsList() {
 		
 		itemsListView = (ListView) rootView.findViewById(R.id.items_list_view);
-		listViewAdapter = new BaseAdapter() {
-			
-			@Override
-			public View getView(int position, View convertView, ViewGroup parent) {
-				
-				InventoryItem item = inventory.getItems().get(position);
-				ListItemView listItem = new ListItemView(getActivity());
-				listItem.setItemName(item.getName());
-				listItem.setItemIcon(item.getBitmap());
-				listItem.setItemSubName(item.getDesc());
-				listItem.setItemTextRight(""+item.getQuantity());
-				
-				final int pos = position;
-				listItem.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						launchItemPopup(false, inventory.getItems().get(pos), pos);
-					}
-				});
-				return listItem;
-			}
-			
-			@Override
-			public long getItemId(int position) {
-				return 0;
-			}
-			
-			@Override
-			public Object getItem(int position) {
-				return inventory.getItems().get(position);
-			}
-			
-			@Override
-			public int getCount() {
-				return inventory.getItems().size();
-			}
-		};
-		
+		listViewAdapter = new InventoryItemAdapter(rootView.getContext(), R.layout.view_list_item, inventory.getItems());
 		itemsListView.setAdapter(listViewAdapter);
 		
 	}
@@ -187,10 +181,14 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 	private void addItem(InventoryItem item, int insertionIndex) {
 		inventory.getItems().add(insertionIndex, item);
 		inventory.saveInventoryItems(rootView.getContext());
+		listViewAdapter.addToOriginal(item);
+		//		listViewAdapter.add(item);
 	}
 	private void removeItem(int toDelete) {
 		inventory.getItems().remove(toDelete);
 		inventory.saveInventoryItems(rootView.getContext());
+		listViewAdapter.removeFromOriginal(toDelete);
+//		listViewAdapter.remove(listViewAdapter.getItem(toDelete));
 	}
 	
 	private void promptUser(String title, String message){
@@ -205,4 +203,112 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 
 	@Override
 	public void onClick(View arg0) {}
+	public class InventoryItemAdapter extends ArrayAdapter<InventoryItem> implements Filterable{
+
+		Context context;
+		int layoutResourceId;
+		ArrayList<InventoryItem> items;
+		ArrayList<InventoryItem> originalItems;
+		Filter myFilter;
+		
+		public InventoryItemAdapter(Context context, int resource, ArrayList<InventoryItem> objects) {
+			super(context, resource, objects);
+			this.context = context;
+			layoutResourceId = resource;
+			items = objects;
+			originalItems = (ArrayList<InventoryItem>) items.clone();
+			myFilter = new Filter(){
+
+				@Override
+				protected FilterResults performFiltering(CharSequence constraint) {
+					FilterResults filterResults = new FilterResults();
+					ArrayList<InventoryItem> tempList = new ArrayList<InventoryItem>();
+					if(constraint != null && originalItems != null){
+						int i = 0;
+						while(i < originalItems.size()){
+							InventoryItem item = originalItems.get(i);
+							if(item.getName().toLowerCase().startsWith(constraint.toString().toLowerCase())){
+								tempList.add(item);
+							}
+							i++;
+						}
+						filterResults.count = tempList.size();
+						filterResults.values = tempList;
+					}
+					return filterResults;
+				}
+
+				@Override
+				protected void publishResults(CharSequence constraint,
+						FilterResults results) {
+					items = (ArrayList<InventoryItem>) results.values;
+					notifyDataSetChanged();
+					clear();
+					for(InventoryItem item : items){
+						add(item);
+					}
+					notifyDataSetInvalidated();
+					
+				}
+				
+			};
+		}
+		
+		private class ViewHolder {
+			private ImageView iconImageView;
+			private TextView textView;
+			private TextView subTextView;
+			private TextView textViewRight;
+		}
+		
+		@Override
+		public View getView(final int position, View convertView, ViewGroup parent) {
+			ViewHolder viewHolder = null;
+			if(convertView == null){
+				convertView = LayoutInflater.from(context).inflate(R.layout.view_list_item, parent, false);
+				viewHolder = new ViewHolder();
+				viewHolder.textView = (TextView) convertView.findViewById(R.id.list_item_textview);
+				viewHolder.subTextView = (TextView) convertView.findViewById(R.id.list_item_subtextview);
+				viewHolder.iconImageView = (ImageView) convertView.findViewById(R.id.list_item_icon);
+				viewHolder.textViewRight = (TextView) convertView.findViewById(R.id.list_item_text_right);
+			
+				convertView.setTag(viewHolder);
+			}else{
+				viewHolder = (ViewHolder) convertView.getTag();
+			}
+			
+			InventoryItem item = getItem(position);
+			if(item != null){
+				viewHolder.textView.setText(item.getName());
+				viewHolder.subTextView.setText(item.getDesc());
+				viewHolder.textViewRight.setText(String.valueOf(item.getQuantity()));
+				if(item.getBitmap()!=null){
+					viewHolder.iconImageView.setImageBitmap(item.getBitmap());
+				}else{
+					Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.box_bud);
+					item.setBitmap(icon);
+					viewHolder.iconImageView.setImageBitmap(icon);
+				}
+				convertView.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						launchItemPopup(false, items.get(position), position);
+					}
+				});
+			}
+			return convertView;
+		}
+		@Override
+		public Filter getFilter() {
+			return myFilter;
+		}
+		public void addToOriginal(InventoryItem item){
+			originalItems.add(item);
+		}
+		
+		public void removeFromOriginal(int toDelete){
+			originalItems.remove(toDelete);
+		}
+	}
 }
