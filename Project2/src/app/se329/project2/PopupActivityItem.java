@@ -167,9 +167,29 @@ class ItemPopup extends Popup {
 		popupContent.findViewById(R.id.reg_photo).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-				photoPickerIntent.setType("image/*");
-				popupActivity.startActivityForResult(photoPickerIntent, 44);  
+				new AlertDialog.Builder(Main.this)
+			    .setTitle("Choose Photo")
+			    .setMessage("New or existing?")
+			    .setView(input)
+			    .setPositiveButton("New", new DialogInterface.OnClickListener() {
+			        public void onClick(DialogInterface dialog, int whichButton) {
+			            // Take new photo.
+			        	Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			        	File imageFile = new File( Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+			        			"image.jpg");
+			        	Uri tempuri= Uri.fromFile(imageFile);
+			        	cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, value);
+			        	intent.putExtra(mediaStore.EXTRA_VIDEO_QUALITY, 1);
+			        	startActivityForResult(cameraIntent, 15);
+			        }
+			    }).setNegativeButton("Existing", new DialogInterface.OnClickListener() {
+			        public void onClick(DialogInterface dialog, int whichButton) {
+			            // Select existing photo.
+			        	Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+						photoPickerIntent.setType("image/*");
+						popupActivity.startActivityForResult(photoPickerIntent, 44);  
+			        }
+			    }).show();				
 			}
 		});
 		

@@ -119,7 +119,7 @@ public class PopupActivity extends ActionBarActivity implements OnClickListener{
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 		Log.i("Result", "@@@ Returned with resultCode: " + resultCode + ", requestCode: " + requestCode);
-		if(requestCode == 44 && resultCode == -1){
+		if((requestCode == 44 || requestCode == 15) && resultCode == -1){
 			Uri selectedImage = data.getData();
             InputStream imageStream = null;
 			try {
@@ -133,9 +133,7 @@ public class PopupActivity extends ActionBarActivity implements OnClickListener{
             MyJsonUtil jUtil = new MyJsonUtil(getApplicationContext());
             bmpName = jUtil.saveBitmap(toSave);
             Log.i("Image","Bitmap saved as: " + bmpName+"!");
-            
 		}
-		
 	}
 
 }
