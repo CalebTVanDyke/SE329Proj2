@@ -60,7 +60,7 @@
                     android:layout_below="@+id/header_layout">
 
                     <FrameLayout
-                        android:id="@+id/frameLayout3"
+                        android:id="@+id/frameLayout6"
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
                         android:background="@color/faint_grey" >
@@ -91,7 +91,7 @@
                     android:layout_below="@+id/item_quantity_layout" >
 
                     <FrameLayout
-                        android:id="@+id/FrameLayout01"
+                        android:id="@+id/FrameLayout05"
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
                         android:layout_alignParentLeft="true"
@@ -135,7 +135,7 @@
                     android:layout_below="@+id/item_descr_layout" >
 
                     <FrameLayout
-                        android:id="@+id/FrameLayout02"
+                        android:id="@+id/FrameLayout04"
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
                         android:layout_alignParentLeft="true"
