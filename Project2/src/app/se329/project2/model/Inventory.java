@@ -20,6 +20,10 @@ public class Inventory {
 		name = inventoryName;
 	}
 	
+	/**
+	 * 
+	 * @return the Items in the inventor to be used by exportCSV
+	 */
 	public ArrayList<InventoryItem> getInventory(){
 		return items;
 	}
