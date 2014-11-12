@@ -208,6 +208,11 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 		PopupActivity.popup(this, getActivity(), 1, new ItemPopup(isNew, item, pos));
 	}
 	
+	public void launchLowInvPopup(boolean isNew, String items, int pos){
+
+		PopupActivity.popup(this, getActivity(), 1, new LowInvPopup(isNew, items, pos));
+	}
+	
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 		Log.i("Result", "@@@ Returned with resultCode: " + resultCode);

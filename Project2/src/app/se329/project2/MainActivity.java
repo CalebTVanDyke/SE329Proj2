@@ -380,4 +380,30 @@ public class MainActivity extends ActionBarActivity {
 	public boolean isNewUser() {
 		return newToDevice;
 	}
+	
+	public void findLowInvItems() {
+
+		String pageTitle = getSupportActionBar().getTitle().toString();
+		
+		String items = "";
+		
+		Log.i("Inventory Pal", "findLowInvItems() on page: "+pageTitle+".");
+		
+		int x = 0;
+		
+		Inventory inv = getCurrentInventory();
+	
+		for(x = 0; x < inv.getItems().size(); x++){
+			if(inv.getItems().get(x).getQuantity() < 5){
+				items += "Item: " + inv.getItems().get(x).getName() + " 		Quantity: " + inv.getItems().get(x).getQuantity() + "\n";
+			}
+		}
+		System.out.println(items);
+		launchLowInvPopup(false, items, x);
+	}
+	
+	public void launchLowInvPopup(boolean isNew, String items, int pos) {
+		PopupActivity.popup((ItemsFragment) currentFragment, currentFragment.getActivity(), 1, new LowInvPopup(false, items, pos));
+	}
+	
 }
