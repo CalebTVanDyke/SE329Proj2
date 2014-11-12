@@ -20,6 +20,10 @@ public class Inventory {
 		name = inventoryName;
 	}
 	
+	public ArrayList<InventoryItem> getInventory(){
+		return items;
+	}
+	
 	public boolean inflateInventory(Context cntxt, String result){
 		MyJsonUtil jsonUtil = new MyJsonUtil(cntxt);
 		items = jsonUtil.getInventoryItems(this, result);

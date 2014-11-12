@@ -1,8 +1,10 @@
 package app.se329.project2;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -120,27 +122,22 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 	}
 
 	private void exportCSV() {
-		final String filename = inventory.getUser() + "_inv_" + inventory.getId();
-				
+		ArrayList<InventoryItem> outCSV = inventory.getItems();
+		
 		File file   = null;
 		File root   = Environment.getExternalStorageDirectory();
 		if (root.canWrite()){
 		    File dir    =   new File (root.getAbsolutePath() + "/Inventory");
 		     dir.mkdirs();
 		     file   =   new File(dir, "Data.csv");
-		     FileOutputStream out   =   null;
 		    try {
-		        out = new FileOutputStream(file);
-		        } catch (FileNotFoundException e) {
-		            e.printStackTrace();
-		        }
-		        try {
-		            out.write(filename.getBytes());
-		        } catch (IOException e) {
-		            e.printStackTrace();
-		        }
-		        try {
-		            out.close();
+		    	BufferedWriter out   = new BufferedWriter(new FileWriter(file));
+		    	out.write("Item , Quantity , Unit Weight , Weight Units, Description" + "\n");
+	        	for(InventoryItem item : outCSV)
+	        	{
+	        		out.write(item.getName() + "," +  item.getQuantity() + "," + item.getUnitWeight() + "," + item.getWeightUnits() + "," + item.getDesc() +"\n");
+	        	}
+		        	out.close();
 		        } catch (IOException e) {
 		            e.printStackTrace();
 		        }
