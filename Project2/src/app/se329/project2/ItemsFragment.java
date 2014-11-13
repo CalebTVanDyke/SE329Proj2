@@ -99,6 +99,10 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 		inflater.inflate(R.menu.items_menu, menu);
 	}
 	
+	/**
+	 * Simply handles Option Menu selections. If an item from the option menu is selected
+	 * this triggers the desired event.
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    int itemId = item.getItemId();
@@ -121,6 +125,9 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 	    return super.onOptionsItemSelected(item);
 	}
 
+	/**
+	 * Exports the User's inventory information as a CSV file.
+	 */
 	private void exportCSV() {
 		ArrayList<InventoryItem> outCSV = inventory.getItems();
 		
@@ -151,6 +158,9 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 		sendIntent.setType("text/html");
 		startActivity(sendIntent);
 	}
+	/**
+	 * Downloads the User's inventory from the database and displays it
+	 */
 	private void downloadFromServer() {
 		final String filename = inventory.getUser() + "_inv_" + inventory.getId();
 		
@@ -196,6 +206,11 @@ public class ItemsFragment extends ProjectFragment implements OnClickListener {
 	private void launchItemPopup(boolean isNew,  InventoryItem item, int pos){
 
 		PopupActivity.popup(this, getActivity(), 1, new ItemPopup(isNew, item, pos));
+	}
+	
+	public void launchLowInvPopup(boolean isNew, String items, int pos){
+
+		PopupActivity.popup(this, getActivity(), 1, new LowInvPopup(isNew, items, pos));
 	}
 	
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {

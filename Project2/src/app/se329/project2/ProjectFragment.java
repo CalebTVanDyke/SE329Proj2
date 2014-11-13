@@ -65,6 +65,9 @@ public abstract class ProjectFragment extends Fragment{
 			getSupportActivity().onBackPressed();
 			return true;
 		}
+		if(item.getItemId() == R.id.action_low_inv){
+			getSupportActivity().findLowInvItems();
+		}
 		return false;
 	}
 	

@@ -21,5 +21,11 @@
         android:title="@string/export"
         android:titleCondensed="Export CSV"/>
     
+    <item
+        android:id="@+id/action_low_inv"
+        android:orderInCategory="102"
+        android:title="Find Low Inv Items"
+        app.se329.project2:showAsAction="never|collapseActionView"/>
+    
     
 </menu>
