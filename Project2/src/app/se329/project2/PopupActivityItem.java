@@ -1,5 +1,6 @@
 package app.se329.project2;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -10,6 +11,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -167,29 +170,33 @@ class ItemPopup extends Popup {
 		popupContent.findViewById(R.id.reg_photo).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				new AlertDialog.Builder(Main.this)
-			    .setTitle("Choose Photo")
-			    .setMessage("New or existing?")
-			    .setView(input)
-			    .setPositiveButton("New", new DialogInterface.OnClickListener() {
+				AlertDialog.Builder alert = new AlertDialog.Builder(new ContextThemeWrapper(popupActivity, R.style.Theme_AppCompat));
+			    alert.setTitle("Choose Photo");
+			    alert.setMessage("New or existing?");
+		        
+			    // Take new photo.
+			    alert.setPositiveButton("New", new DialogInterface.OnClickListener() {
 			        public void onClick(DialogInterface dialog, int whichButton) {
-			            // Take new photo.
-			        	Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-			        	File imageFile = new File( Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-			        			"image.jpg");
-			        	Uri tempuri= Uri.fromFile(imageFile);
-			        	cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, value);
-			        	intent.putExtra(mediaStore.EXTRA_VIDEO_QUALITY, 1);
-			        	startActivityForResult(cameraIntent, 15);
+			        	String imagename = item.getName() + "Image.jpg";
+			        	
+			        	Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+			            File photo = new File(Environment.getExternalStorageDirectory(),  imagename);
+			            intent.putExtra(MediaStore.EXTRA_OUTPUT,
+			                    Uri.fromFile(photo));
+			            popupActivity.startActivityForResult(intent, 15);
 			        }
-			    }).setNegativeButton("Existing", new DialogInterface.OnClickListener() {
+			    });
+			    
+		        // Select existing photo.
+			    alert.setNegativeButton("Existing", new DialogInterface.OnClickListener() {
 			        public void onClick(DialogInterface dialog, int whichButton) {
-			            // Select existing photo.
 			        	Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
 						photoPickerIntent.setType("image/*");
 						popupActivity.startActivityForResult(photoPickerIntent, 44);  
 			        }
-			    }).show();				
+			    });
+			    
+			    alert.show();				
 			}
 		});
 		

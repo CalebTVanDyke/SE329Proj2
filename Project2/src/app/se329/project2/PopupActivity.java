@@ -135,7 +135,6 @@ public class PopupActivity extends ActionBarActivity implements OnClickListener{
             Log.i("Image","Bitmap saved as: " + bmpName+"!");
 		}
 	}
-
 }
 
 /**
